@@ -1,0 +1,53 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+CHANGELOG.md
+CLAUDE.md
+
+# Node.js
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Environment files
+.env.local
+.env.production
+.env.docker
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Laravel specific
+/storage/*.key
+/vendor
+.env.backup
+
+# Docker
+docker-compose.override.yml
+coolify.yml
+
+# Logs
+*.log
+
+# Cache
+bootstrap/cache/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+
+# Testing
+.phpunit.result.cache
+tests/_output/*
+tests/_data/*
+tests/_support/_generated/*

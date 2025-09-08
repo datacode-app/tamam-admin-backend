@@ -1,0 +1,41 @@
+# Coolify Deployment Configuration for Tamam Backend
+# This file defines the services and deployment pipeline for the application.
+
+services:
+  # Application Service: The Laravel Backend
+  app:
+    # Specifies the Dockerfile to use for building the image.
+    # Coolify will build this image and push it to a private registry.
+    build:
+      - Dockerfile
+    # Defines the health check to ensure the application is running correctly.
+    # Coolify uses this to verify a successful deployment before switching traffic.
+    healthcheck:
+      # The command to run to check the health of the application.
+      # In this case, it checks if the php-fpm process is running.
+      test: ["CMD", "pidof", "php-fpm"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    # Defines the ports to expose from the container.
+    # Coolify will map this to the appropriate public-facing port.
+    ports:
+      - "9000"
+
+# Deployment Settings
+# This section defines how the application is deployed.
+deployment:
+  # Specifies the deployment strategy.
+  # 'rolling' ensures zero-downtime deployments by gradually replacing old containers.
+  strategy: rolling
+  # Defines commands to run during the deployment lifecycle.
+  hooks:
+    # Commands to run after the new container is started but before it receives traffic.
+    # This is the ideal place for database migrations and cache clearing.
+    post-deployment:
+      - "php artisan migrate --force"
+      - "php artisan db:seed --force" # Optional: remove if you don't want to seed on every deployment
+      - "php artisan config:cache"
+      - "php artisan route:cache"
+      - "php artisan view:cache"
+      - "php artisan storage:link"

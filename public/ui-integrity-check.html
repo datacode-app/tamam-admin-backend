@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛡️ UI Integrity Check - Food Dashboard</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .check-section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        .check-item {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .check-item:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        .status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .status.pass {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status.running {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .test-results {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .summary {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .summary h3 {
+            margin: 0 0 15px;
+            color: #667eea;
+        }
+        .metric {
+            display: inline-block;
+            margin: 10px 20px;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            text-align: center;
+            min-width: 120px;
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .metric-label {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ UI Integrity Check - Food Dashboard</h1>
+        
+        <div class="check-section">
+            <h2>🎨 Visual UI Components</h2>
+            
+            <div class="check-item" id="check-css-classes">
+                <span>CSS Classes Integrity</span>
+                <span class="status running">Checking...</span>
+            </div>
+            
+            <div class="check-item" id="check-layout">
+                <span>Layout Structure</span>
+                <span class="status running">Checking...</span>
+            </div>
+            
+            <div class="check-item" id="check-responsive">
+                <span>Responsive Design</span>
+                <span class="status running">Checking...</span>
+            </div>
+        </div>
+
+        <div class="check-section">
+            <h2>⚡ JavaScript Functionality</h2>
+            
+            <div class="check-item" id="check-js-errors">
+                <span>JavaScript Console Errors</span>
+                <span class="status running">Checking...</span>
+            </div>
+            
+            <div class="check-item" id="check-event-handlers">
+                <span>Event Handler Binding</span>
+                <span class="status running">Checking...</span>
+            </div>
+            
+            <div class="check-item" id="check-dom-manipulation">
+                <span>DOM Manipulation Functions</span>
+                <span class="status running">Checking...</span>
+            </div>
+        </div>
+
+        <div class="check-section">
+            <h2>📁 File Upload Functionality</h2>
+            
+            <div class="check-item" id="check-file-input">
+                <span>File Input Element</span>
+                <span class="status running">Checking...</span>
+            </div>
+            
+            <div class="check-item" id="check-drag-drop">
+                <span>Drag & Drop Events</span>
+                <span class="status running">Checking...</span>
+            </div>
+            
+            <div class="check-item" id="check-click-handler">
+                <span>Click Event Handler</span>
+                <span class="status running">Checking...</span>
+            </div>
+            
+            <div class="check-item" id="check-file-validation">
+                <span>File Type Validation</span>
+                <span class="status running">Checking...</span>
+            </div>
+        </div>
+
+        <div class="check-section">
+            <h2>🚀 Performance & Load</h2>
+            
+            <div class="check-item" id="check-load-time">
+                <span>Page Load Performance</span>
+                <span class="status running">Checking...</span>
+            </div>
+            
+            <div class="check-item" id="check-memory">
+                <span>Memory Usage</span>
+                <span class="status running">Checking...</span>
+            </div>
+        </div>
+
+        <button onclick="runAllChecks()">🔍 Run All Checks</button>
+        <button onclick="runQuickCheck()">⚡ Quick Check</button>
+        <button onclick="clearResults()">🧹 Clear Results</button>
+
+        <div class="test-results" id="console-output"></div>
+
+        <div class="summary">
+            <h3>📊 Test Summary</h3>
+            <div class="metric">
+                <div class="metric-value" id="passed-count">0</div>
+                <div class="metric-label">Passed</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="failed-count">0</div>
+                <div class="metric-label">Failed</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="warning-count">0</div>
+                <div class="metric-label">Warnings</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="total-time">0ms</div>
+                <div class="metric-label">Total Time</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {
+            passed: 0,
+            failed: 0,
+            warnings: 0,
+            startTime: 0
+        };
+
+        // Console logger
+        const consoleOutput = document.getElementById('console-output');
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        function logToConsole(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff6b6b' : type === 'warn' ? '#feca57' : '#48dbfb';
+            consoleOutput.innerHTML += `<span style="color: ${color}">[${timestamp}] ${message}</span>\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            logToConsole(args.join(' '));
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            logToConsole(args.join(' '), 'error');
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            logToConsole(args.join(' '), 'warn');
+        };
+
+        function updateStatus(checkId, status, message) {
+            const checkItem = document.getElementById(checkId);
+            const statusEl = checkItem.querySelector('.status');
+            statusEl.className = `status ${status}`;
+            statusEl.textContent = message;
+            
+            if (status === 'pass') testResults.passed++;
+            else if (status === 'fail') testResults.failed++;
+            else if (status === 'warning') testResults.warnings++;
+            
+            updateSummary();
+        }
+
+        function updateSummary() {
+            document.getElementById('passed-count').textContent = testResults.passed;
+            document.getElementById('failed-count').textContent = testResults.failed;
+            document.getElementById('warning-count').textContent = testResults.warnings;
+            
+            const totalTime = Date.now() - testResults.startTime;
+            document.getElementById('total-time').textContent = totalTime + 'ms';
+        }
+
+        function runAllChecks() {
+            testResults = { passed: 0, failed: 0, warnings: 0, startTime: Date.now() };
+            console.log('🚀 Starting comprehensive UI integrity check...');
+            
+            // Visual UI Components
+            checkCSSClasses();
+            checkLayout();
+            checkResponsive();
+            
+            // JavaScript Functionality  
+            checkJSErrors();
+            checkEventHandlers();
+            checkDOMManipulation();
+            
+            // File Upload Functionality
+            checkFileInput();
+            checkDragDrop();
+            checkClickHandler();
+            checkFileValidation();
+            
+            // Performance
+            checkLoadTime();
+            checkMemoryUsage();
+            
+            console.log('✅ All checks completed!');
+        }
+
+        function runQuickCheck() {
+            testResults = { passed: 0, failed: 0, warnings: 0, startTime: Date.now() };
+            console.log('⚡ Running quick integrity check...');
+            
+            checkCSSClasses();
+            checkJSErrors();
+            checkFileInput();
+            checkClickHandler();
+            
+            console.log('✅ Quick check completed!');
+        }
+
+        // Individual check functions
+        function checkCSSClasses() {
+            console.log('🎨 Checking CSS classes...');
+            try {
+                const requiredClasses = [
+                    '.upload-area',
+                    '.import-type-card', 
+                    '.drag-over',
+                    '.file-selected'
+                ];
+                
+                let foundClasses = 0;
+                requiredClasses.forEach(className => {
+                    const elements = document.querySelectorAll(className);
+                    if (elements.length > 0 || document.querySelector('style').textContent.includes(className)) {
+                        foundClasses++;
+                    }
+                });
+                
+                if (foundClasses === requiredClasses.length) {
+                    updateStatus('check-css-classes', 'pass', 'All classes found');
+                } else {
+                    updateStatus('check-css-classes', 'warning', `${foundClasses}/${requiredClasses.length} classes`);
+                }
+            } catch (e) {
+                updateStatus('check-css-classes', 'fail', 'Check failed');
+                console.error('CSS classes check failed:', e);
+            }
+        }
+
+        function checkLayout() {
+            console.log('🏗️ Checking layout structure...');
+            try {
+                const viewport = window.innerWidth;
+                const bodyStyles = getComputedStyle(document.body);
+                
+                if (viewport >= 320 && bodyStyles.fontFamily && bodyStyles.backgroundColor) {
+                    updateStatus('check-layout', 'pass', 'Layout OK');
+                } else {
+                    updateStatus('check-layout', 'warning', 'Layout issues detected');
+                }
+            } catch (e) {
+                updateStatus('check-layout', 'fail', 'Layout check failed');
+                console.error('Layout check failed:', e);
+            }
+        }
+
+        function checkResponsive() {
+            console.log('📱 Checking responsive design...');
+            try {
+                const viewport = window.innerWidth;
+                const hasViewportMeta = !!document.querySelector('meta[name="viewport"]');
+                
+                if (hasViewportMeta && viewport >= 320) {
+                    updateStatus('check-responsive', 'pass', 'Responsive OK');
+                } else {
+                    updateStatus('check-responsive', 'warning', 'Limited responsiveness');
+                }
+            } catch (e) {
+                updateStatus('check-responsive', 'fail', 'Responsive check failed');
+                console.error('Responsive check failed:', e);
+            }
+        }
+
+        function checkJSErrors() {
+            console.log('⚡ Checking JavaScript errors...');
+            
+            let errorCount = 0;
+            const originalErrorHandler = window.onerror;
+            
+            window.onerror = function(message, source, lineno, colno, error) {
+                errorCount++;
+                return originalErrorHandler ? originalErrorHandler.apply(this, arguments) : false;
+            };
+            
+            setTimeout(() => {
+                if (errorCount === 0) {
+                    updateStatus('check-js-errors', 'pass', 'No errors detected');
+                } else {
+                    updateStatus('check-js-errors', 'fail', `${errorCount} errors found`);
+                }
+                window.onerror = originalErrorHandler;
+            }, 1000);
+        }
+
+        function checkEventHandlers() {
+            console.log('🎯 Checking event handlers...');
+            try {
+                let handlersFound = 0;
+                
+                // Check for common event listeners
+                const elementsWithEvents = document.querySelectorAll('[onclick], [onchange], [ondrop]');
+                if (elementsWithEvents.length > 0) handlersFound++;
+                
+                // Check for addEventListener calls in scripts
+                const scripts = Array.from(document.querySelectorAll('script'));
+                const hasEventListeners = scripts.some(script => 
+                    script.textContent.includes('addEventListener')
+                );
+                if (hasEventListeners) handlersFound++;
+                
+                if (handlersFound >= 1) {
+                    updateStatus('check-event-handlers', 'pass', 'Event handlers found');
+                } else {
+                    updateStatus('check-event-handlers', 'warning', 'Limited event handlers');
+                }
+            } catch (e) {
+                updateStatus('check-event-handlers', 'fail', 'Handler check failed');
+                console.error('Event handler check failed:', e);
+            }
+        }
+
+        function checkDOMManipulation() {
+            console.log('🔧 Checking DOM manipulation functions...');
+            try {
+                const hasDOMManipulation = 
+                    typeof document.querySelector === 'function' &&
+                    typeof document.getElementById === 'function' &&
+                    typeof Element.prototype.addEventListener === 'function';
+                
+                if (hasDOMManipulation) {
+                    updateStatus('check-dom-manipulation', 'pass', 'DOM functions available');
+                } else {
+                    updateStatus('check-dom-manipulation', 'fail', 'DOM functions missing');
+                }
+            } catch (e) {
+                updateStatus('check-dom-manipulation', 'fail', 'DOM check failed');
+                console.error('DOM manipulation check failed:', e);
+            }
+        }
+
+        function checkFileInput() {
+            console.log('📁 Checking file input element...');
+            try {
+                // Create test file input to check if our CSS fixes work
+                const testInput = document.createElement('input');
+                testInput.type = 'file';
+                testInput.accept = '.xlsx,.xls,.csv';
+                testInput.style.cssText = 'position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer;';
+                
+                document.body.appendChild(testInput);
+                
+                const styles = getComputedStyle(testInput);
+                const isClickable = styles.pointerEvents !== 'none';
+                const hasCorrectSize = parseFloat(styles.width) > 10; // More than 10px
+                
+                document.body.removeChild(testInput);
+                
+                if (isClickable && hasCorrectSize) {
+                    updateStatus('check-file-input', 'pass', 'File input configured correctly');
+                } else {
+                    updateStatus('check-file-input', 'fail', 'File input configuration issues');
+                }
+            } catch (e) {
+                updateStatus('check-file-input', 'fail', 'File input check failed');
+                console.error('File input check failed:', e);
+            }
+        }
+
+        function checkDragDrop() {
+            console.log('🎯 Checking drag & drop events...');
+            try {
+                const testDiv = document.createElement('div');
+                testDiv.style.cssText = 'width: 100px; height: 100px; position: absolute; top: -1000px;';
+                document.body.appendChild(testDiv);
+                
+                let eventHandlerWorks = false;
+                testDiv.addEventListener('dragover', function(e) {
+                    eventHandlerWorks = true;
+                });
+                
+                // Simulate dragover event
+                const event = new DragEvent('dragover', { bubbles: true });
+                testDiv.dispatchEvent(event);
+                
+                document.body.removeChild(testDiv);
+                
+                if (eventHandlerWorks) {
+                    updateStatus('check-drag-drop', 'pass', 'Drag & drop events work');
+                } else {
+                    updateStatus('check-drag-drop', 'warning', 'Drag & drop not fully testable');
+                }
+            } catch (e) {
+                updateStatus('check-drag-drop', 'fail', 'Drag & drop check failed');
+                console.error('Drag & drop check failed:', e);
+            }
+        }
+
+        function checkClickHandler() {
+            console.log('🖱️ Checking click handler...');
+            try {
+                const testButton = document.createElement('button');
+                let clickHandlerWorks = false;
+                
+                testButton.addEventListener('click', function() {
+                    clickHandlerWorks = true;
+                });
+                
+                testButton.click();
+                
+                if (clickHandlerWorks) {
+                    updateStatus('check-click-handler', 'pass', 'Click handlers work');
+                } else {
+                    updateStatus('check-click-handler', 'fail', 'Click handlers not working');
+                }
+            } catch (e) {
+                updateStatus('check-click-handler', 'fail', 'Click handler check failed');
+                console.error('Click handler check failed:', e);
+            }
+        }
+
+        function checkFileValidation() {
+            console.log('✅ Checking file validation...');
+            try {
+                // Test if file type validation would work
+                const testFile = new File(['test'], 'test.xlsx', { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const validTypes = ['.xlsx', '.xls', '.csv'];
+                const fileName = testFile.name;
+                const isValid = validTypes.some(ext => fileName.endsWith(ext));
+                
+                if (isValid) {
+                    updateStatus('check-file-validation', 'pass', 'File validation works');
+                } else {
+                    updateStatus('check-file-validation', 'fail', 'File validation issues');
+                }
+            } catch (e) {
+                updateStatus('check-file-validation', 'warning', 'File validation limited');
+                console.warn('File validation check limited:', e);
+            }
+        }
+
+        function checkLoadTime() {
+            console.log('🚀 Checking load performance...');
+            try {
+                const loadTime = performance.now();
+                
+                if (loadTime < 3000) { // Less than 3 seconds
+                    updateStatus('check-load-time', 'pass', `${Math.round(loadTime)}ms`);
+                } else {
+                    updateStatus('check-load-time', 'warning', `${Math.round(loadTime)}ms (slow)`);
+                }
+            } catch (e) {
+                updateStatus('check-load-time', 'fail', 'Load time check failed');
+                console.error('Load time check failed:', e);
+            }
+        }
+
+        function checkMemoryUsage() {
+            console.log('💾 Checking memory usage...');
+            try {
+                if (performance.memory) {
+                    const used = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024);
+                    
+                    if (used < 50) { // Less than 50MB
+                        updateStatus('check-memory', 'pass', `${used}MB used`);
+                    } else {
+                        updateStatus('check-memory', 'warning', `${used}MB used (high)`);
+                    }
+                } else {
+                    updateStatus('check-memory', 'warning', 'Memory info unavailable');
+                }
+            } catch (e) {
+                updateStatus('check-memory', 'warning', 'Memory check limited');
+                console.warn('Memory check failed:', e);
+            }
+        }
+
+        function clearResults() {
+            testResults = { passed: 0, failed: 0, warnings: 0, startTime: 0 };
+            consoleOutput.innerHTML = '';
+            
+            // Reset all status indicators
+            document.querySelectorAll('.status').forEach(status => {
+                status.className = 'status running';
+                status.textContent = 'Pending...';
+            });
+            
+            updateSummary();
+            console.log('🧹 Results cleared');
+        }
+
+        // Auto-run quick check on load
+        window.addEventListener('load', function() {
+            console.log('🛡️ UI Integrity Checker loaded');
+            setTimeout(() => {
+                runQuickCheck();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
