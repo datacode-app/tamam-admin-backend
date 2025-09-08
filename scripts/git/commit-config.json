@@ -1,0 +1,60 @@
+{
+  "users": {
+    "frontend": {
+      "name": "datacode-mobile",
+      "email": "kurdapp.com@gmail.com",
+      "specialization": ["React", "Next.js", "Flutter", "Mobile", "UI/UX"]
+    },
+    "backend": {
+      "name": "Datacode-backend", 
+      "email": "ferbon.com@gmail.com",
+      "specialization": ["Laravel", "PHP", "APIs", "Database", "Server Logic"]
+    },
+    "devops": {
+      "name": "Datacode-Dev-ops",
+      "email": "mjdbarana@gmail.com", 
+      "specialization": ["Terraform", "Docker", "CI/CD", "Infrastructure", "Deployment"]
+    }
+  },
+  "project_paths": {
+    "frontend": [
+      "*/package.json",
+      "*/src/components/*", 
+      "*/src/pages/*",
+      "*.tsx",
+      "*.jsx",
+      "*/public/*",
+      "*/styles/*"
+    ],
+    "mobile": [
+      "*/pubspec.yaml",
+      "*/android/*",
+      "*/ios/*", 
+      "*/lib/*",
+      "*.dart"
+    ],
+    "backend": [
+      "app/*",
+      "config/*",
+      "database/*", 
+      "routes/*",
+      "composer.json",
+      "*.php",
+      "Modules/*"
+    ],
+    "infrastructure": [
+      "deployment/*",
+      "*.tf",
+      "terraform.tfvars",
+      "docker-compose*.yml",
+      "Dockerfile",
+      ".github/workflows/*"
+    ]
+  },
+  "ai_config": {
+    "enabled": true,
+    "commit_style": "conventional",
+    "analyze_code_changes": true,
+    "generate_detailed_messages": true
+  }
+}
