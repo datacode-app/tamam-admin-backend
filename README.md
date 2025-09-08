@@ -136,6 +136,7 @@ Full support for:
 - **Backend Team**: `Datacode-backend` (ferbon.com@gmail.com)
 - **Mobile Team**: `datacode-mobile` (kurdapp.com@gmail.com)
 - **DevOps Team**: `datacode-devops` (mjdbarana@gmail.com)
+- **Contact**: info@datacode.app
 
 ## 🔄 Git Workflow
 
@@ -172,9 +173,12 @@ The API serves multiple client applications with comprehensive endpoints for:
 
 For technical support and development questions:
 - Backend issues: Contact Datacode-backend team
+- General Contact: info@datacode.app
 - API integration: Refer to API documentation
 - Multi-user workflow: Use provided git scripts
 
 ---
 
 **TAMAM Admin Backend** - Powering the complete delivery and rental ecosystem for Kurdistan and Iraq.
+
+**Developed by Datacode**
