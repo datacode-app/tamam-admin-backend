@@ -3,7 +3,7 @@
         <div class="print--invoice">
             @if ($order->store)
             <div class="text-center pt-4 mb-3">
-                <img class="invoice-logo" src="{{ asset('assets/admin/img/invoice-logo.png') }}"
+                <img class="invoice-logo" src="{{ asset('assets/admin/img/logo.png') }}"
                     alt="">
                 <div class="top-info">
                     <h2 class="store-name">{{ $order->store->name }}</h2>

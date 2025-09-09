@@ -12,7 +12,7 @@
                 <div>
                     <h1 class="page-header-title text-break">
                         <span class="page-header-icon">
-                            <img src="{{ asset('assets/admin/img/car-logo.png') }}" alt="">
+                            <img src="{{ asset('assets/admin/img/logo.png') }}" alt="">
                         </span>
                         <span>{{ translate('messages.Update Driver') }}
                     </h1>

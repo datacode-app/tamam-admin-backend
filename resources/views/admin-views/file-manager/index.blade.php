@@ -10,7 +10,7 @@
     <div class="page-header d-flex flex-wrap justify-content-between">
         <h1 class="page-header-title">
             <span class="page-header-icon">
-                <img src="{{asset('assets/admin/img/folder-logo.png')}}" class="w--26" alt="">
+                <img src="{{asset('assets/admin/img/logo.png')}}" class="w--26" alt="">
             </span>
             <span>
                 {{translate('messages.gallery')}}

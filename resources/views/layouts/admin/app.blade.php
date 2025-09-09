@@ -13,8 +13,8 @@ $countryCode= strtolower($country?$country->value:'auto');
     <title>@yield('title')</title>
     <!-- Favicon -->
     @php($logo=\App\Models\BusinessSetting::where(['key'=>'icon'])->first())
-    <link rel="shortcut icon" href="">
-    <link rel="icon" type="image/x-icon" href="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}">
+    <link rel="shortcut icon" href="{{asset('favicon.ico')}}?v={{time()}}">
+    <link rel="icon" type="image/x-icon" href="{{asset('favicon.ico')}}?v={{time()}}">
     <!-- Font -->
     <link href="{{asset('assets/admin/css/fonts.css')}}" rel="stylesheet">
     <!-- CSS Implementing Plugins -->
