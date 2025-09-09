@@ -202,6 +202,102 @@ generate_ai_commit_message() {
     echo "feat($scope): update $project_type components"
 }
 
+# Generate combined commit message for single commit mode
+generate_combined_commit_message() {
+    local primary_type="$1"
+    local all_files="$2"
+    shift 2
+    local contributors=("$@")
+    
+    # Use AI agent with primary type if available
+    if [[ -f "$AI_AGENT_SCRIPT" ]] && command -v node &> /dev/null; then
+        local ai_message=$(node "$AI_AGENT_SCRIPT" "$primary_type" "$all_files" 2>/dev/null || echo "")
+        
+        if [[ -n "$ai_message" ]]; then
+            # Enhance AI message with contributor context
+            if [[ ${#contributors[@]} -gt 1 ]]; then
+                echo "$ai_message (multi-team: ${contributors[*]})"
+            else
+                echo "$ai_message"
+            fi
+            return 0
+        fi
+    fi
+    
+    # Fallback: Generate comprehensive message
+    local scope=""
+    local action="update"
+    
+    case "$primary_type" in
+        "frontend") scope="web" ;;
+        "mobile") scope="app" ;;
+        "backend") scope="api" ;;
+        "infrastructure") scope="deploy" ;;
+        "docs") scope="docs" ;;
+        *) scope="core" ;;
+    esac
+    
+    # Determine action based on contributors
+    if [[ ${#contributors[@]} -gt 2 ]]; then
+        action="integrate"
+    elif [[ ${#contributors[@]} -eq 1 ]]; then
+        action="update"
+    else
+        action="enhance"
+    fi
+    
+    # Count total files for context
+    local file_count=$(echo "$all_files" | wc -w)
+    local context=""
+    [[ $file_count -gt 10 ]] && context=" ($file_count files)"
+    
+    echo "🚀 feat($scope): $action ${primary_type} with cross-team changes${context}"
+}
+
+# Generate co-author attribution for Git commits
+generate_co_authors() {
+    local contributors=("$@")
+    local co_authors=""
+    local primary_set=false
+    
+    # Load user info from config for co-author attribution
+    for contributor in "${contributors[@]}"; do
+        if [[ "$primary_set" == "false" ]]; then
+            primary_set=true
+            continue  # Skip primary author (already set via git config)
+        fi
+        
+        local author_name=""
+        local author_email=""
+        
+        case "$contributor" in
+            "frontend"|"mobile")
+                author_name="$USER_FRONTEND_NAME"
+                author_email="$USER_FRONTEND_EMAIL"
+                ;;
+            "backend")
+                author_name="$USER_BACKEND_NAME"
+                author_email="$USER_BACKEND_EMAIL"
+                ;;
+            "infrastructure")
+                author_name="$USER_DEVOPS_NAME"
+                author_email="$USER_DEVOPS_EMAIL"
+                ;;
+            "docs")
+                # Default to backend user for docs
+                author_name="$USER_BACKEND_NAME"
+                author_email="$USER_BACKEND_EMAIL"
+                ;;
+        esac
+        
+        if [[ -n "$author_name" && -n "$author_email" ]]; then
+            co_authors+="Co-authored-by: $author_name <$author_email>"$'\n'
+        fi
+    done
+    
+    echo "$co_authors"
+}
+
 # Create and commit changes by project type
 commit_by_project_type() {
     local project_type="$1"
@@ -228,6 +324,89 @@ commit_by_project_type() {
     git commit -m "$commit_message"
     
     log "INFO" "✅ Committed $project_type changes"
+}
+
+# Single commit workflow - preserves user attribution but creates one commit
+single_commit_workflow() {
+    log "INFO" "Starting smart single-commit workflow..."
+    
+    # Check for uncommitted changes
+    if git diff --quiet && git diff --cached --quiet; then
+        log "WARN" "No changes to commit"
+        exit 0
+    fi
+    
+    # Analyze and categorize changes
+    analyze_changes
+    
+    # Determine primary contributor based on most significant changes
+    local primary_type=""
+    local primary_count=0
+    local contributors=()
+    
+    # Count files by type to determine primary contributor
+    if [[ -n "$FILES_BACKEND" ]]; then
+        local backend_count=$(echo "$FILES_BACKEND" | wc -w)
+        [[ $backend_count -gt $primary_count ]] && primary_type="backend" && primary_count=$backend_count
+        contributors+=("backend")
+    fi
+    
+    if [[ -n "$FILES_FRONTEND" ]]; then
+        local frontend_count=$(echo "$FILES_FRONTEND" | wc -w)
+        [[ $frontend_count -gt $primary_count ]] && primary_type="frontend" && primary_count=$frontend_count
+        contributors+=("frontend")
+    fi
+    
+    if [[ -n "$FILES_MOBILE" ]]; then
+        local mobile_count=$(echo "$FILES_MOBILE" | wc -w)
+        [[ $mobile_count -gt $primary_count ]] && primary_type="mobile" && primary_count=$mobile_count
+        contributors+=("mobile")
+    fi
+    
+    if [[ -n "$FILES_INFRASTRUCTURE" ]]; then
+        local infra_count=$(echo "$FILES_INFRASTRUCTURE" | wc -w)
+        [[ $infra_count -gt $primary_count ]] && primary_type="infrastructure" && primary_count=$infra_count
+        contributors+=("infrastructure")
+    fi
+    
+    if [[ -n "$FILES_DOCS" ]]; then
+        local docs_count=$(echo "$FILES_DOCS" | wc -w)
+        [[ $docs_count -gt $primary_count ]] && primary_type="docs" && primary_count=$docs_count
+        contributors+=("docs")
+    fi
+    
+    # Default to backend if no clear primary type
+    [[ -z "$primary_type" ]] && primary_type="backend"
+    
+    log "INFO" "Primary contributor: $primary_type ($primary_count files)"
+    log "INFO" "All contributors: ${contributors[*]}"
+    
+    # Set git user to primary contributor
+    set_git_user "$primary_type"
+    
+    # Add all files
+    local all_files="$FILES_INFRASTRUCTURE $FILES_BACKEND $FILES_FRONTEND $FILES_MOBILE $FILES_DOCS"
+    echo "$all_files" | xargs git add
+    
+    # Generate comprehensive commit message
+    local commit_message=$(generate_combined_commit_message "$primary_type" "$all_files" "${contributors[@]}")
+    
+    log "INFO" "Committing with message: $commit_message"
+    
+    # Create single commit with co-authors
+    local co_authors=$(generate_co_authors "${contributors[@]}")
+    if [[ -n "$co_authors" ]]; then
+        git commit -m "$commit_message" -m "$co_authors"
+    else
+        git commit -m "$commit_message"
+    fi
+    
+    log "INFO" "✅ Single commit created successfully!"
+    
+    # Show summary
+    echo
+    log "INFO" "Commit Summary:"
+    git log --oneline -n 1 --show-signature
 }
 
 # Main commit workflow
@@ -611,13 +790,19 @@ case "${1:-}" in
         echo "Usage: $0 [OPTIONS]"
         echo
         echo "Options:"
-        echo "  --setup      Initialize configuration for multi-user commits"
-        echo "  --help       Show this help message"
-        echo "  --status     Show current git status and configuration"
+        echo "  --setup           Initialize configuration for multi-user commits"
+        echo "  --single-commit   Create one commit with proper user attribution"
+        echo "  --help            Show this help message"
+        echo "  --status          Show current git status and configuration"
         echo
         echo "Examples:"
-        echo "  $0 --setup    # First time setup"
-        echo "  $0            # Make intelligent commits"
+        echo "  $0 --setup         # First time setup"
+        echo "  $0                 # Make intelligent multi-commits (default)"
+        echo "  $0 --single-commit # Make single commit for deployment"
+        echo
+        echo "Single Commit Mode:"
+        echo "  Perfect for deployment workflows - creates one commit but preserves"
+        echo "  user attribution by setting primary author and adding co-authors."
         echo
         exit 0
         ;;
@@ -633,6 +818,10 @@ case "${1:-}" in
         fi
         exit 0
         ;;
+    "--single-commit" | "single")
+        # Single commit workflow
+        SINGLE_COMMIT_MODE=true
+        ;;
     "")
         # Main workflow - no arguments
         ;;
@@ -646,4 +835,10 @@ esac
 # Main execution
 check_dependencies
 load_config
-main_commit_workflow
+
+# Choose workflow based on mode
+if [[ "${SINGLE_COMMIT_MODE:-false}" == "true" ]]; then
+    single_commit_workflow
+else
+    main_commit_workflow
+fi

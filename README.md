@@ -3,6 +3,7 @@
 ![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=flat&logo=laravel&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-8.1+-777BB4?style=flat&logo=php&logoColor=white)
 ![Multi-Module](https://img.shields.io/badge/Architecture-Multi--Module-blue)
+![Staging Deployment](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/actions/workflows/deploy-staging.yml/badge.svg)
 
 ## Overview
 
@@ -107,6 +108,21 @@ Admin-with-Rental/
 ├── routes/                # Route definitions
 └── scripts/git/           # Multi-user git workflow
 ```
+
+## 🚀 Automated Deployment
+
+### Staging Server
+- **URL**: https://staging.tamam.shop/admin
+- **Auto-Deploy**: Triggers on every push to `main` branch
+- **Workflow**: `.github/workflows/deploy-staging.yml`
+
+### Deployment Process
+1. **Automated**: Push to main → GitHub Actions → Deploy to staging
+2. **Manual**: Run `./deploy-to-staging.sh` for immediate deployment
+3. **Testing**: Automated route testing after deployment
+
+### Setup Instructions
+See [.github/DEPLOYMENT_SETUP.md](.github/DEPLOYMENT_SETUP.md) for GitHub secrets configuration.
 
 ## 🔐 Security Features
 
