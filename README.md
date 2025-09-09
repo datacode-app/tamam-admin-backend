@@ -149,9 +149,9 @@ Full support for:
 
 ## 🤝 Development Team
 
-- **Backend Team**: `Datacode-backend` (ferbon.com@gmail.com)
-- **Mobile Team**: `datacode-mobile` (kurdapp.com@gmail.com)
-- **DevOps Team**: `datacode-devops` (mjdbarana@gmail.com)
+- **Backend Team**: `Datacode-backend` (backend@datacode.dev)
+- **Mobile Team**: `datacode-mobile` (frontend@datacode.dev)
+- **DevOps Team**: `datacode-devops` (devops@datacode.dev)
 - **Contact**: info@datacode.app
 
 ## 🔄 Git Workflow

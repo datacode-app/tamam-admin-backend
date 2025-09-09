@@ -2,17 +2,17 @@
   "users": {
     "frontend": {
       "name": "datacode-mobile",
-      "email": "kurdapp.com@gmail.com",
+      "email": "frontend@datacode.dev",
       "specialization": ["React", "Next.js", "Flutter", "Mobile", "UI/UX"]
     },
     "backend": {
       "name": "Datacode-backend", 
-      "email": "ferbon.com@gmail.com",
+      "email": "backend@datacode.dev",
       "specialization": ["Laravel", "PHP", "APIs", "Database", "Server Logic"]
     },
     "devops": {
       "name": "Datacode-Dev-ops",
-      "email": "mjdbarana@gmail.com", 
+      "email": "devops@datacode.dev", 
       "specialization": ["Terraform", "Docker", "CI/CD", "Infrastructure", "Deployment"]
     }
   },
