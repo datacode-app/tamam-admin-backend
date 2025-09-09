@@ -1,0 +1,1 @@
+- remember to deploy to staging server we use deploy-to-staging.sh

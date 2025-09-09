@@ -1,0 +1,136 @@
+name: 🚀 Deploy to Staging Server
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  deploy-staging:
+    name: 📦 Deploy TAMAM Admin to Staging
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: staging
+      url: https://staging.tamam.shop/admin
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🔐 Setup SSH Key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.STAGING_SSH_KEY }}
+      
+      - name: 🔑 Add Server to Known Hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.STAGING_SERVER_IP }} >> ~/.ssh/known_hosts
+      
+      - name: 🧪 Test SSH Connection
+        run: |
+          ssh -o ConnectTimeout=10 root@${{ secrets.STAGING_SERVER_IP }} "echo '✅ SSH connection successful'"
+      
+      - name: 📦 Deploy Laravel Files
+        run: |
+          echo "🚀 Starting deployment to staging.tamam.shop..."
+          
+          # Deploy core Laravel files with rsync
+          rsync -avz --progress \
+            --include='app/' --include='app/**' \
+            --include='bootstrap/' --include='bootstrap/**' \
+            --include='config/' --include='config/**' \
+            --include='database/' --include='database/**' \
+            --include='public/' --include='public/**' \
+            --include='resources/' --include='resources/**' \
+            --include='routes/' --include='routes/**' \
+            --include='storage/' --include='storage/**' \
+            --include='Modules/' --include='Modules/**' \
+            --include='vendor/' --include='vendor/**' \
+            --include='artisan' \
+            --include='composer.json' \
+            --include='composer.lock' \
+            --exclude='*' \
+            ./ root@${{ secrets.STAGING_SERVER_IP }}:/var/www/tamam/
+          
+          echo "✅ Files deployed successfully"
+      
+      - name: 🔧 Set File Permissions
+        run: |
+          ssh root@${{ secrets.STAGING_SERVER_IP }} "
+            chown -R www-data:www-data /var/www/tamam &&
+            chmod -R 755 /var/www/tamam &&
+            chmod -R 775 /var/www/tamam/storage &&
+            mkdir -p /var/www/tamam/bootstrap/cache &&
+            chmod -R 775 /var/www/tamam/bootstrap/cache
+          "
+      
+      - name: 📚 Update Dependencies
+        run: |
+          ssh root@${{ secrets.STAGING_SERVER_IP }} "
+            cd /var/www/tamam &&
+            composer install --no-dev --optimize-autoloader --no-interaction
+          "
+      
+      - name: 🧹 Clear Laravel Caches
+        run: |
+          ssh root@${{ secrets.STAGING_SERVER_IP }} "
+            cd /var/www/tamam &&
+            php artisan config:clear &&
+            php artisan route:clear &&
+            php artisan cache:clear &&
+            php artisan view:clear
+          "
+      
+      - name: 🔑 Generate App Key (if needed)
+        run: |
+          ssh root@${{ secrets.STAGING_SERVER_IP }} "
+            cd /var/www/tamam &&
+            if ! grep -q '^APP_KEY=base64:' .env; then 
+              php artisan key:generate --force
+            fi
+          "
+      
+      - name: 🔄 Restart Services
+        run: |
+          ssh root@${{ secrets.STAGING_SERVER_IP }} "
+            systemctl restart php8.3-fpm &&
+            systemctl restart nginx
+          "
+      
+      - name: 🧪 Test Deployment
+        run: |
+          echo "Testing deployment..."
+          
+          # Test admin dashboard
+          DASHBOARD_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://staging.tamam.shop/admin)
+          echo "Admin Dashboard: $DASHBOARD_STATUS"
+          
+          # Test admin login
+          LOGIN_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://staging.tamam.shop/login/admin)
+          echo "Admin Login: $LOGIN_STATUS"
+          
+          # Test addon management
+          ADDON_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://staging.tamam.shop/admin/addon)
+          echo "Addon Management: $ADDON_STATUS"
+          
+          # Verify all critical routes are working
+          if [[ "$DASHBOARD_STATUS" =~ ^(200|302)$ ]] && [[ "$LOGIN_STATUS" =~ ^(200|302)$ ]] && [[ "$ADDON_STATUS" =~ ^(200|302)$ ]]; then
+            echo "✅ All critical routes are responding correctly"
+          else
+            echo "❌ Some routes are not responding correctly"
+            exit 1
+          fi
+      
+      - name: 📊 Deployment Summary
+        if: always()
+        run: |
+          echo "🎉 STAGING DEPLOYMENT COMPLETE!"
+          echo "📍 Admin URL: https://staging.tamam.shop/admin"
+          echo "📍 Login URL: https://staging.tamam.shop/login/admin"
+          echo "⏰ Deployed at: $(date)"
+          echo ""
+          echo "🔍 Next Steps:"
+          echo "  • Verify admin login functionality"
+          echo "  • Test routing fixes are working"
+          echo "  • Monitor application logs"
