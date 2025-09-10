@@ -36,7 +36,7 @@ class Localization
         if ($request->is('vendor-panel*')) {
             if (session()->has('vendor_local')) {
                 $v = session()->get('vendor_local');
-                App::setLocale(in_array($v, ['ku','ckb','kmr','kurdish','sorani']) ? 'ckb' : $v);
+                App::setLocale(in_array($v, ['ckb','kurdish','sorani']) ? 'ckb' : $v);
             }
             else{
                 session()->put('vendor_site_direction', $direction);
@@ -45,7 +45,7 @@ class Localization
         }elseif($request->is('admin*')){
             if (session()->has('local')) {
                 $l = session()->get('local');
-                App::setLocale(in_array($l, ['ku','ckb','kmr','kurdish','sorani']) ? 'ckb' : $l);
+                App::setLocale(in_array($l, ['ckb','kurdish','sorani']) ? 'ckb' : $l);
             }
             else{
                 session()->put('site_direction', $direction);
@@ -54,7 +54,7 @@ class Localization
         }else{
             if (session()->has('landing_local')) {
                 $ll = session()->get('landing_local');
-                App::setLocale(in_array($ll, ['ku','ckb','kmr','kurdish','sorani']) ? 'ckb' : $ll);
+                App::setLocale(in_array($ll, ['ckb','kurdish','sorani']) ? 'ckb' : $ll);
             }else{
                 session()->put('landing_site_direction', $direction);
                 App::setLocale($lang);

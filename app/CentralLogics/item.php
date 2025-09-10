@@ -992,7 +992,9 @@ class ProductLogic
 
     public static function format_export_items($foods,$module_type)
     {
+        $exportService = new \App\Services\MultilingualExportService();
         $storage = [];
+        
         foreach($foods as $item)
         {
             $category_id = 0;
@@ -1008,31 +1010,44 @@ class ProductLogic
                     $sub_category_id = $category['id'];
                 }
             }
-            $storage[] = [
+            
+            // Extract multilingual data for all supported languages
+            $multilingualData = $exportService->extractMultilingualData($item, 'Item');
+            
+            // Base item data
+            $baseData = [
                 'Id'=>$item->id,
                 'Name'=>$item->name,
                 'Description'=>$item->description,
-                'Image'=>$item->image,
-                'Images'=>$item->images,
                 'CategoryId'=>$category_id,
                 'SubCategoryId'=>$sub_category_id,
-                'UnitId'=>$item->unit_id,
-                'Stock'=>$item->stock,
+                'StoreId'=>$item->store_id,
                 'Price'=>$item->price,
-                'Discount'=>$item->discount,
                 'DiscountType'=>$item->discount_type,
+                'Discount'=>$item->discount,
+                'Unit'=>$item->unit ?? null,
+                'Stock'=>$item->stock,
+                'MaxOrderQuantity'=>$item->maximum_cart_quantity ?? null,
+                'VegNonVeg'=>$item->veg == 1 ? 'veg' : 'non-veg',
+                'Image'=>$item->image,
                 'AvailableTimeStarts'=>$item->available_time_starts,
                 'AvailableTimeEnds'=>$item->available_time_ends,
+                'Status'=>$item->status == 1 ? 1 : 0,
+                'RecommendedFlag'=>$item->recommended == 1 ? 1 : 0,
+                'PopularFlag'=>$item->popular == 1 ? 1 : 0,
+                // Keep additional fields for advanced users
+                'Images'=>$item->images,
+                'UnitId'=>$item->unit_id,
                 'Variations'=>$module_type == 'food'?$item->food_variations:$item->variations,
                 'ChoiceOptions'=>$item?->choice_options,
                 'AddOns'=>$item->add_ons,
                 'Attributes'=>$item->attributes,
-                'StoreId'=>$item->store_id,
                 'ModuleId'=>$item->module_id,
-                'Status'=>$item->status == 1 ? 'active' : 'inactive',
-                'Veg'=>$item->veg == 1 ? 'yes' : 'no',
-                'Recommended'=>$item->recommended == 1 ? 'yes' : 'no',
             ];
+            
+            // Merge base data with multilingual data
+            $exportRow = array_merge($baseData, $multilingualData);
+            $storage[] = $exportRow;
         }
 
         return $storage;

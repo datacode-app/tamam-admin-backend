@@ -175,7 +175,7 @@ class LanguageController extends Controller
         session()->forget('language_settings');
         Helpers::language_load();
         // Normalize Kurdish variants to canonical backend code 'ckb'
-        $normalizedCode = in_array($request['code'], ['ku','ckb','kmr','kurdish','sorani']) ? 'ckb' : $request['code'];
+        $normalizedCode = in_array($request['code'], ['ckb','kurdish','sorani']) ? 'ckb' : $request['code'];
         session()->put('local', $normalizedCode);
         session()->put('site_direction', $direction);
         Toastr::success('Default Language Changed!');
@@ -516,7 +516,7 @@ class LanguageController extends Controller
         session()->forget('language_settings');
         Helpers::language_load();
         // Normalize Kurdish variants to canonical backend code 'ckb'
-        $normalized = in_array($local, ['ku','ckb','kmr','kurdish','sorani']) ? 'ckb' : $local;
+        $normalized = in_array($local, ['ckb','kurdish','sorani']) ? 'ckb' : $local;
         session()->put('local', $normalized);
         session()->put('site_direction', $direction);
         return redirect()->back();

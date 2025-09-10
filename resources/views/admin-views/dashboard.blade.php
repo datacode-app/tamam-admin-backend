@@ -263,10 +263,10 @@
                                 <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('Fill name_en, name_ar, name_ku columns for English, Arabic, and Kurdish names.') }}
+                                        {{ translate('Fill name_en, name_ar, name_ckb columns for English, Arabic, and Kurdish names.') }}
                                     </li>
                                     <li>
-                                        {{ translate('Fill address_en, address_ar, address_ku columns for addresses in all languages.') }}
+                                        {{ translate('Fill address_en, address_ar, address_ckb columns for addresses in all languages.') }}
                                     </li>
                                     <li>
                                         {{ translate('Make sure phone numbers and email addresses are unique.') }}
@@ -323,7 +323,7 @@
                     <div class="mt-3">
                         <small class="text-muted">
                             <i class="fa fa-info-circle"></i> 
-                            {{ translate('This template includes columns for English (en), Arabic (ar), and Kurdish (ku) languages') }}
+                            {{ translate('This template includes columns for English (en), Arabic (ar), and Kurdish Sorani (ckb) languages') }}
                         </small>
                     </div>
                 </div>
@@ -354,7 +354,7 @@
                                 <div class="d-flex gap-3">
                                     <span class="badge badge-soft-primary">🇬🇧 English (en)</span>
                                     <span class="badge badge-soft-success">🇸🇦 Arabic (ar)</span>
-                                    <span class="badge badge-soft-warning">Kurdistan Kurdish (ku)</span>
+                                    <span class="badge badge-soft-warning">🇰🇷 Kurdish Sorani (ckb)</span>
                                 </div>
                             </div>
                         </div>

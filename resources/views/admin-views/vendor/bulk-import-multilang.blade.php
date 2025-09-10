@@ -74,10 +74,10 @@
                                         {{ translate('You_can_get_module_id_and_zone_id_from_their_list,_please_input_the_right_ids.')}
                                     </li>
                                     <li>
-                                        {{ translate('For multilingual support, fill storeName_ku for Kurdish Sorani and storeName_ar for Arabic.') }}
+                                        {{ translate('For multilingual support, fill storeName_ckb for Kurdish Sorani and storeName_ar for Arabic.') }}
                                     </li>
                                     <li>
-                                        {{ translate('Address translations can be provided as Address_ku and Address_ar.') }}
+                                        {{ translate('Address translations can be provided as Address_ckb and Address_ar.') }}
                                     </li>
                                     <li>
                                         {{ translate('Multilingual fields are optional - leave empty if translation not needed.') }}

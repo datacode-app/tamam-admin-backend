@@ -531,7 +531,7 @@ const GATEWAYS_LANGUAGES = [
     ["code" => "kv", "name" => "Komi", "nativeName" => "коми кыв"],
     ["code" => "kg", "name" => "Kongo", "nativeName" => "KiKongo"],
     ["code" => "ko", "name" => "Korean", "nativeName" => "한국어 (韓國語), 조선말 (朝鮮語)"],
-    ["code" => "ku", "name" => "Kurdish", "nativeName" => "Kurdî, كوردی‎"],
+    ["code" => "ckb", "name" => "Kurdish Sorani", "nativeName" => "سۆرانی, کوردی"],
     ["code" => "kj", "name" => "Kwanyama, Kuanyama", "nativeName" => "Kuanyama"],
     ["code" => "la", "name" => "Latin", "nativeName" => "latine, lingua latina"],
     ["code" => "lb", "name" => "Luxembourgish, Letzeburgesch", "nativeName" => "Lëtzebuergesch"],

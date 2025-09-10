@@ -12,7 +12,7 @@ class MultilingualExportService
         'ckb' => 'Kurdish Sorani'
     ];
 
-    protected $kurdishAliases = ['ckb', 'ku', 'kmr', 'sorani', 'kurdish'];
+    protected $kurdishAliases = ['ckb', 'sorani', 'kurdish'];
 
     /**
      * Extract multilingual data from a model for export
@@ -99,7 +99,7 @@ class MultilingualExportService
     protected function getKurdishTranslation(array $fieldTranslations): ?string
     {
         // Try each Kurdish alias in order of preference
-        $kurdishPreference = ['ckb', 'ku', 'kmr', 'sorani', 'kurdish'];
+        $kurdishPreference = ['ckb', 'sorani', 'kurdish'];
         
         foreach ($kurdishPreference as $alias) {
             if (isset($fieldTranslations[$alias]) && !empty($fieldTranslations[$alias])) {
@@ -131,8 +131,8 @@ class MultilingualExportService
      */
     protected function getDisplayLangCode(string $langCode): string
     {
-        // Use 'ku' for Kurdish in export headers for compatibility
-        return $langCode === 'ckb' ? 'ku' : $langCode;
+        // Use ckb for Kurdish Sorani directly
+        return $langCode;
     }
 
     /**

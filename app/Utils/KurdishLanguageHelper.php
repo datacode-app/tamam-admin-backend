@@ -9,10 +9,7 @@ class KurdishLanguageHelper
      * These will all be normalized to 'ckb' for backend processing
      */
     const KURDISH_VARIANTS = [
-        'ku',                // Kurdish (generic)
-        'ckb',               // Central Kurdish/Sorani (ISO 639-3)
-        'kmr',               // Kurmanji Kurdish  
-        'kur',               // Kurdish (alternative)
+        'ckb',               // Central Kurdish/Sorani (ISO 639-3) - PRIMARY
         'kurdish',           // Full name variant
         'sorani',            // Kurdish Sorani dialect
         'central-kurdish',   // Central Kurdish

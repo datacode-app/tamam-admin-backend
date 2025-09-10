@@ -56,9 +56,9 @@ class ItemImportService
             20 => 'Status',
             21 => 'Veg',
             22 => 'Recommended',
-            23 => 'name_ku',
+            23 => 'name_ckb',
             24 => 'name_ar',
-            25 => 'description_ku',
+            25 => 'description_ckb',
             26 => 'description_ar'
         ];
 

@@ -2910,7 +2910,7 @@ class Helpers
             'kk-Kazakh - қазақ тілі',
             'km-Khmer - ខ្មែរ',
             'ko-Korean - 한국어',
-            'ku-Kurdish - Kurdî',
+            'ckb-Kurdish Sorani - سۆرانی',
             'ky-Kyrgyz - кыргызча',
             'lo-Lao - ລາວ',
             'la-Latin',
@@ -4563,23 +4563,6 @@ class Helpers
         $discountApplied = min($productPrice, $discount);
         $finalPrice = max(0, $productPrice - $discountApplied);
         return ['final_price' => $finalPrice, 'discount_applied' => $discountApplied];
-    }
-
-    /**
-     * Map Kurdish language codes for backward compatibility
-     * This allows Flutter apps to use 'ku' while backend uses 'ckb'
-     * 
-     * @param string $languageCode
-     * @return string
-     */
-    public static function mapKurdishLanguageCode($languageCode)
-    {
-        // Kurdish backward compatibility mapping
-        if ($languageCode === 'ku') {
-            return 'ckb'; // Map 'ku' to 'ckb' (Central Kurdish/Sorani)
-        }
-        
-        return $languageCode; // Return other language codes unchanged
     }
 
     /**

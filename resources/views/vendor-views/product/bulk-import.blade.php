@@ -61,7 +61,7 @@
 
                     <p>{{ translate('6. You can upload your product images in product folder from gallery, and copy image`s path.') }}</p>
                     <p>{{ translate('7. Image_file_name_must_be_in_30_character') }}</p>
-                    <p>{{ translate('8. For multilingual support, download the multilingual template and include _ku (Kurdish) and _ar (Arabic) columns for name and description fields.') }}</p>
+                    <p>{{ translate('8. For multilingual support, download the multilingual template and include _ckb (Kurdish Sorani) and _ar (Arabic) columns for name and description fields.') }}</p>
 
                 </div>
                 <div class="text-center pb-4">

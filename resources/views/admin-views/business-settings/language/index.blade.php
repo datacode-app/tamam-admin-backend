@@ -420,7 +420,7 @@
 {{--                                                    <option value="kk" {{ $data['code']== 'kk'?'selected':'' }}>Kazakh - қазақ тілі</option>--}}
 {{--                                                    <option value="km" {{ $data['code']== 'km'?'selected':'' }}>Khmer - ខ្មែរ</option>--}}
 {{--                                                    <option value="ko" {{ $data['code']== 'ko'?'selected':'' }}>Korean - 한국어</option>--}}
-{{--                                                    <option value="ku" {{ $data['code']== 'ku'?'selected':'' }}>Kurdish - Kurdî</option>--}}
+{{--                                                    <option value="ckb" {{ $data['code']== 'ckb'?'selected':'' }}>Kurdish Sorani - سۆرانی</option>--}}
 {{--                                                    <option value="ky" {{ $data['code']== 'ky'?'selected':'' }}>Kyrgyz - кыргызча</option>--}}
 {{--                                                    <option value="lo" {{ $data['code']== 'lo'?'selected':'' }}>Lao - ລາວ</option>--}}
 {{--                                                    <option value="la" {{ $data['code']== 'la'?'selected':'' }}>Latin</option>--}}

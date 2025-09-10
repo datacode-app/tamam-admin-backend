@@ -1760,7 +1760,7 @@ class VendorController extends Controller
                         if (isset($emailToCollection[$store['email']])) {
                             $row = $emailToCollection[$store['email']];
                             
-                            // CRITICAL FIX: The template now uses 'name_ku', 'name_ar', 'address_ku', 'address_ar'
+                            // Use ckb for Kurdish Sorani: 'name_ckb', 'name_ar', 'address_ckb', 'address_ar'
                             // The multilingual service will recognize these directly
                             $multilingualRow = $row;
                             
@@ -2026,7 +2026,7 @@ class VendorController extends Controller
                 'ownerFirstName' => 'Ahmad',
                 'ownerLastName' => 'Hassan',
                 'storeName' => 'Kurdistan Restaurant',
-                'name_ku' => 'چێشتخانەی کوردستان',
+                'name_ckb' => 'چێشتخانەی کوردستان',
                 'name_ar' => 'مطعم كردستان',
                 'phone' => '+9647501234567',
                 'email' => 'ahmad.kurdistan@example.com',
@@ -2035,7 +2035,7 @@ class VendorController extends Controller
                 'latitude' => '36.1916',
                 'longitude' => '44.0092',
                 'Address' => 'Downtown Erbil, Kurdistan Region',
-                'address_ku' => 'ناوەندی شاری هەولێر، هەرێمی کوردستان',
+                'address_ckb' => 'ناوەندی شاری هەولێر، هەرێمی کوردستان',
                 'address_ar' => 'وسط مدينة أربيل، إقليم كردستان',
                 'zone_id' => 1,
                 'module_id' => 2,
@@ -2068,7 +2068,7 @@ class VendorController extends Controller
                 'ownerFirstName' => 'Fatima',
                 'ownerLastName' => 'Ali',
                 'storeName' => 'Kurdish Bakery & Sweets',
-                'name_ku' => 'نانخانە و شیرینی کوردی',
+                'name_ckb' => 'نانخانە و شیرینی کوردی',
                 'name_ar' => 'مخبز وحلويات كردي',
                 'phone' => '+9647501234568',
                 'email' => 'fatima.bakery@example.com',
@@ -2077,7 +2077,7 @@ class VendorController extends Controller
                 'latitude' => '36.1918',
                 'longitude' => '44.0094',
                 'Address' => 'Sami Street, Erbil',
-                'address_ku' => 'شەقامی سامی، هەولێر',
+                'address_ckb' => 'شەقامی سامی، هەولێر',
                 'address_ar' => 'شارع سامي، أربيل',
                 'zone_id' => 1,
                 'module_id' => 2,

@@ -6,7 +6,7 @@ This guide covers the comprehensive multilingual database migrations created for
 
 The multilingual migration system sets up complete language support for:
 - **Arabic** (`ar`)
-- **Kurdish Sorani** (`ckb`) with fallback aliases (`ku`, `kmr`, `sorani`)
+- **Kurdish Sorani** (`ckb`) with fallback aliases (`sorani`, `kurdish`)
 - **English** (`en`) as default/fallback
 
 ## 📋 Migrations Created
@@ -179,7 +179,7 @@ php artisan tinker
 - Audit trail tracks all changes
 
 ### ✅ **Kurdish Language Support**
-- Supports multiple Kurdish variants (`ckb`, `ku`, `kmr`, `sorani`)
+- Supports Kurdish Sorani (`ckb`) with variants (`sorani`, `kurdish`)
 - Intelligent fallback system
 - RTL text direction support
 
@@ -197,8 +197,6 @@ For stores/items tables with >10K records, the data migration uses chunking but 
 ### **Kurdish Aliases**
 The system supports these Kurdish language codes:
 - `ckb` (Central Kurdish/Sorani) - Primary
-- `ku` (Kurdish) - Alias  
-- `kmr` (Kurmanji) - Alias
 - `sorani` - Alias
 - `kurdish` - Alias
 

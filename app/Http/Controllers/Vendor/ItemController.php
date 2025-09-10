@@ -2049,9 +2049,9 @@ class ItemController extends Controller
                         'Veg' => 'yes',
                         'Recommended' => 'no'
                     ], [
-                        'name_ku' => $example['name_ku'] ?? '',
+                        'name_ckb' => $example['name_ckb'] ?? '',
                         'name_ar' => $example['name_ar'] ?? '',
-                        'description_ku' => $example['description_ku'] ?? '',
+                        'description_ckb' => $example['description_ckb'] ?? '',
                         'description_ar' => $example['description_ar'] ?? '',
                     ]);
                 }

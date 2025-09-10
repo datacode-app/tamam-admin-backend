@@ -1615,15 +1615,15 @@ class ItemController extends Controller
         $isMultilingual = $request->has('type') && $request->type === 'multilang';
         
         if ($isMultilingual) {
-            // FIXED: Follow working store import pattern - use hardcoded data with consistent _ku naming
+            // Use ckb for Kurdish Sorani language code
             $templateData = [
                 [
                     'Id' => 1,
                     'Name' => 'Kurdish Kebab Platter',
-                    'name_ku' => 'قاپی کەبابی کوردی', 
+                    'name_ckb' => 'قاپی کەبابی کوردی', 
                     'name_ar' => 'طبق كباب كردي',
                     'Description' => 'Traditional Kurdish grilled meat served with rice and vegetables',
-                    'description_ku' => 'گۆشتی برژاوی کوردی لەگەڵ برنج و سەوزە',
+                    'description_ckb' => 'گۆشتی برژاوی کوردی لەگەڵ برنج و سەوزە',
                     'description_ar' => 'لحم كردي مشوي يقدم مع الأرز والخضار',
                     'CategoryId' => 1,
                     'SubCategoryId' => 2,
@@ -1649,10 +1649,10 @@ class ItemController extends Controller
                 [
                     'Id' => 2,
                     'Name' => 'Arabic Hummus',
-                    'name_ku' => 'حومسی عەرەبی',
+                    'name_ckb' => 'حومسی عەرەبی',
                     'name_ar' => 'حمص عربي',
                     'Description' => 'Creamy chickpea dip with olive oil and tahini',
-                    'description_ku' => 'حومسی کرێمی لەگەڵ زەیتی زەیتوون و تاهینی',
+                    'description_ckb' => 'حومسی کرێمی لەگەڵ زەیتی زەیتوون و تاهینی',
                     'description_ar' => 'غموس الحمص الكريمي مع زيت الزيتون والطحينة',
                     'CategoryId' => 3,
                     'SubCategoryId' => 4,
@@ -1735,7 +1735,7 @@ class ItemController extends Controller
             'to_date' => 'required_if:type,date_wise'
         ]);
         $module_type = Config::get('module.current_module_type');
-        $products = Item::when($request['type'] == 'date_wise', function ($query) use ($request) {
+        $products = Item::with('translations')->when($request['type'] == 'date_wise', function ($query) use ($request) {
             $query->whereBetween('created_at', [$request['from_date'] . ' 00:00:00', $request['to_date'] . ' 23:59:59']);
         })
             ->when($request['type'] == 'id_wise', function ($query) use ($request) {
@@ -2341,12 +2341,12 @@ class ItemController extends Controller
             
             // Skip numeric header row (0, 1, 2, 3...)
             if ($firstValue === '0' && $secondValue === '1' && isset($normalizedCollection[2]) && $normalizedCollection[2] === '2') {
-                return ['Id' => '', 'Name' => '', 'Description' => '', 'Image' => '', 'Images' => '', 'CategoryId' => '', 'SubCategoryId' => '', 'UnitId' => '', 'Stock' => '', 'Price' => '', 'Discount' => '', 'DiscountType' => '', 'AvailableTimeStarts' => '', 'AvailableTimeEnds' => '', 'Variations' => '', 'ChoiceOptions' => '', 'AddOns' => '', 'Attributes' => '', 'StoreId' => '', 'ModuleId' => '', 'Status' => '', 'Veg' => '', 'Recommended' => '', 'name_ku' => '', 'name_ar' => '', 'description_ku' => '', 'description_ar' => ''];
+                return ['Id' => '', 'Name' => '', 'Description' => '', 'Image' => '', 'Images' => '', 'CategoryId' => '', 'SubCategoryId' => '', 'UnitId' => '', 'Stock' => '', 'Price' => '', 'Discount' => '', 'DiscountType' => '', 'AvailableTimeStarts' => '', 'AvailableTimeEnds' => '', 'Variations' => '', 'ChoiceOptions' => '', 'AddOns' => '', 'Attributes' => '', 'StoreId' => '', 'ModuleId' => '', 'Status' => '', 'Veg' => '', 'Recommended' => '', 'name_ckb' => '', 'name_ar' => '', 'description_ckb' => '', 'description_ar' => ''];
             }
             
             // Skip text header row (Id, Name, Description...)
             if ($firstValue === 'Id' || $firstValue === 'id' || $firstValue === 'ID') {
-                return ['Id' => '', 'Name' => '', 'Description' => '', 'Image' => '', 'Images' => '', 'CategoryId' => '', 'SubCategoryId' => '', 'UnitId' => '', 'Stock' => '', 'Price' => '', 'Discount' => '', 'DiscountType' => '', 'AvailableTimeStarts' => '', 'AvailableTimeEnds' => '', 'Variations' => '', 'ChoiceOptions' => '', 'AddOns' => '', 'Attributes' => '', 'StoreId' => '', 'ModuleId' => '', 'Status' => '', 'Veg' => '', 'Recommended' => '', 'name_ku' => '', 'name_ar' => '', 'description_ku' => '', 'description_ar' => ''];
+                return ['Id' => '', 'Name' => '', 'Description' => '', 'Image' => '', 'Images' => '', 'CategoryId' => '', 'SubCategoryId' => '', 'UnitId' => '', 'Stock' => '', 'Price' => '', 'Discount' => '', 'DiscountType' => '', 'AvailableTimeStarts' => '', 'AvailableTimeEnds' => '', 'Variations' => '', 'ChoiceOptions' => '', 'AddOns' => '', 'Attributes' => '', 'StoreId' => '', 'ModuleId' => '', 'Status' => '', 'Veg' => '', 'Recommended' => '', 'name_ckb' => '', 'name_ar' => '', 'description_ckb' => '', 'description_ar' => ''];
             }
             
             // Old format mapping (based on template column order)
@@ -2375,9 +2375,9 @@ class ItemController extends Controller
                 'Veg' => $normalizedCollection[21] ?? '',
                 'Recommended' => $normalizedCollection[22] ?? '',
                 // Multilingual fields (from old format)
-                'name_ku' => $normalizedCollection[23] ?? '',
+                'name_ckb' => $normalizedCollection[23] ?? '',
                 'name_ar' => $normalizedCollection[24] ?? '',
-                'description_ku' => $normalizedCollection[25] ?? '',
+                'description_ckb' => $normalizedCollection[25] ?? '',
                 'description_ar' => $normalizedCollection[26] ?? '',
             ];
         }
@@ -2407,9 +2407,9 @@ class ItemController extends Controller
             'Status' => '',
             'Veg' => '',
             'Recommended' => '',
-            'name_ku' => '',
+            'name_ckb' => '',
             'name_ar' => '',
-            'description_ku' => '',
+            'description_ckb' => '',
             'description_ar' => '',
         ], $normalizedCollection);
     }

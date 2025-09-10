@@ -22,7 +22,7 @@ class LanguageController extends Controller
         session()->forget('vendor_language_settings');
         Helpers::vendor_language_load();
         session()->put('vendor_site_direction', $direction);
-        $normalized = in_array($local, ['ku','ckb','kmr','kurdish','sorani']) ? 'ckb' : $local;
+        $normalized = in_array($local, ['ckb','kurdish','sorani']) ? 'ckb' : $local;
         session()->put('vendor_local', $normalized);
         return redirect()->back();
     }

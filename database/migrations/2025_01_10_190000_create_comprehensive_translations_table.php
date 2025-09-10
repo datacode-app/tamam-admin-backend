@@ -27,7 +27,7 @@ return new class extends Migration
             $table->unsignedBigInteger('translationable_id')->index();
             
             // Language and content fields
-            $table->string('locale', 10)->index(); // e.g., 'ar', 'ckb', 'ku', 'en'
+            $table->string('locale', 10)->index(); // e.g., 'ar', 'ckb', 'en'
             $table->string('key', 100)->index(); // e.g., 'name', 'description', 'address'
             $table->longText('value')->nullable(); // Support for long content
             

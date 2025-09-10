@@ -50,7 +50,7 @@ class DMVehicle extends Model
         static::addGlobalScope('translate', function (Builder $builder) {
             $builder->with(['translations' => function ($query) {
                 $currentLocale = app()->getLocale();
-                $kurdishLocales = ['ku', 'ckb', 'kmr', 'kurdish', 'sorani'];
+                $kurdishLocales = ['ckb', 'kurdish', 'sorani'];
                 if (in_array($currentLocale, $kurdishLocales, true)) {
                     return $query->whereIn('locale', $kurdishLocales);
                 }

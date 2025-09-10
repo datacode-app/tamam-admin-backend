@@ -107,7 +107,7 @@ class LoginController extends Controller
         abort_if($role == null, 404);
         $site_direction = $siteDirections[$role];
         $locale = $locals[$role];
-        App::setLocale(in_array($locale, ['ku','ckb','kmr','kurdish','sorani']) ? 'ckb' : $locale);
+        App::setLocale(in_array($locale, ['ckb','kurdish','sorani']) ? 'ckb' : $locale);
         $custome_recaptcha = new CaptchaBuilder;
         $custome_recaptcha->build();
         Session::put('six_captcha', $custome_recaptcha->getPhrase());

@@ -5,9 +5,9 @@ namespace App\Traits;
 trait HasKurdishFallback
 {
     /**
-     * Kurdish locale variants for fallback
+     * Kurdish locale variants for fallback - ckb is primary
      */
-    private static $kurdishLocales = ['ku', 'ckb', 'kmr', 'kurdish', 'sorani'];
+    private static $kurdishLocales = ['ckb', 'kurdish', 'sorani'];
 
     /**
      * Get translated attribute with Kurdish fallback

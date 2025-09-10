@@ -19,7 +19,7 @@ class LanguageNormalizer
             'name' => 'Kurdish Sorani',
             'native_name' => 'کوردی سۆرانی',
             'canonical' => 'ckb',
-            'aliases' => ['ckb', 'ku', 'CKB', 'KU', 'ku_IQ', 'ckb_IQ', 'kurdish', 'sorani', 'kmr', 'Kurdish'],
+            'aliases' => ['ckb', 'CKB', 'ckb_IQ', 'kurdish', 'sorani', 'Kurdish'],
             'rtl' => true,
             'fallbacks' => ['en']
         ],
@@ -297,7 +297,7 @@ class LanguageNormalizer
         foreach ($multilingualFields as $field) {
             foreach (['ckb', 'ar'] as $langCode) {
                 $config = $this->languageConfig[$langCode];
-                $displayAlias = $langCode === 'ckb' ? 'ku' : $langCode;
+                $displayAlias = $langCode;
                 $headers[] = $field . '_' . $displayAlias;
             }
         }

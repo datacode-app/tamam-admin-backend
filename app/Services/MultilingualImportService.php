@@ -62,15 +62,15 @@ class MultilingualImportService
         
         foreach ($fields as $field) {
             foreach ($this->supportedLanguages as $langCode => $langName) {
-                // Support aliases for language codes (e.g., 'ku' as alias of 'ckb')
+                // Support aliases for language codes (e.g., 'sorani' as alias of 'ckb')
                 $aliases = $this->getLangAliases($langCode);
                 $foundForThisLang = false;
 
                 foreach ($aliases as $alias) {
                     // Check for multilingual columns in various formats
                     $multilingualColumns = [
-                        $field . '_' . $alias, // Standard: name_ku, description_ar
-                        ucfirst($field) . '_' . $alias, // Capitalized: Name_ku, Description_ar
+                        $field . '_' . $alias, // Standard: name_ckb, description_ar
+                        ucfirst($field) . '_' . $alias, // Capitalized: Name_ckb, Description_ar
                     ];
 
                     // Add special case variations
@@ -183,7 +183,7 @@ class MultilingualImportService
         
         foreach ($fields as $field) {
             foreach ($this->supportedLanguages as $langCode => $langName) {
-                // Prefer user-facing alias codes (e.g., 'ku' instead of 'ckb') in templates
+                // Use canonical language codes directly (e.g., 'ckb') in templates
                 $displayCode = $this->getDisplayLangCode($langCode);
                 $multilingualHeaders[] = $field . '_' . $displayCode;
             }
@@ -229,12 +229,12 @@ class MultilingualImportService
 
     /**
      * Return supported alias codes for a canonical language code
-     * Example: 'ckb' => ['ckb', 'ku']
+     * Example: 'ckb' => ['ckb', 'CKB', 'kurdish', 'sorani']
      */
     public function getLangAliases(string $langCode): array
     {
         $aliases = [
-            'ckb' => ['ckb', 'ku', 'CKB', 'ku_IQ', 'ckb_IQ', 'KU', 'kurdish', 'sorani', 'kmr'],
+            'ckb' => ['ckb', 'CKB', 'ckb_IQ', 'kurdish', 'sorani'],
             'ar' => ['ar', 'AR', 'ar_IQ', 'arabic'],
         ];
         return $aliases[$langCode] ?? [$langCode];
@@ -242,15 +242,12 @@ class MultilingualImportService
 
     /**
      * Return user-facing display code for headers/templates
-     * Example: 'ckb' => 'ku'
+     * Example: 'ckb' => 'ckb' (Kurdish Sorani)
      */
     public function getDisplayLangCode(string $langCode): string
     {
-        $display = [
-            'ckb' => 'ku', // Use 'ku' for display to match working templates
-            'ar' => 'ar',
-        ];
-        return $display[$langCode] ?? $langCode;
+        // Use the canonical language codes directly
+        return $langCode;
     }
 
     /**
@@ -290,12 +287,12 @@ class MultilingualImportService
                     'ownerFirstName' => 'Ahmad',
                     'ownerLastName' => 'Hassan', 
                     'storeName' => 'Kurdistan Restaurant',
-                    'name_ku' => 'چێشتخانەی کوردستان',
+                    'name_ckb' => 'چێشتخانەی کوردستان',
                     'name_ar' => 'مطعم كردستان',
                     'phone' => '+9647501234567',
                     'email' => 'ahmad.kurdistan@test.com',
                     'Address' => 'Downtown Erbil',
-                    'address_ku' => 'ناوەندی هەولێر', 
+                    'address_ckb' => 'ناوەندی هەولێر', 
                     'address_ar' => 'وسط أربيل',
                     'zone_id' => 1,
                     'module_id' => 2,
@@ -304,10 +301,10 @@ class MultilingualImportService
             'Item' => [
                 [
                     'name' => 'Chicken Biryani',
-                    'name_ku' => 'برنجی مریشک',
+                    'name_ckb' => 'برنجی مریشک',
                     'name_ar' => 'برياني الدجاج',
                     'description' => 'Delicious aromatic chicken biryani with basmati rice and traditional spices',
-                    'description_ku' => 'برنجی مریشکی خۆشتام لەگەڵ برنجی باسماتی و بەهاراتی تەقلیدی',
+                    'description_ckb' => 'برنجی مریشکی خۆشتام لەگەڵ برنجی باسماتی و بەهاراتی تەقلیدی',
                     'description_ar' => 'برياني دجاج لذيذ وعطر مع أرز البسمتي والبهارات التقليدية',
                     'category_id' => 1,
                     'store_id' => 1,
@@ -319,10 +316,10 @@ class MultilingualImportService
                 ],
                 [
                     'name' => 'Kurdish Kebab',
-                    'name_ku' => 'کەبابی کوردی',
+                    'name_ckb' => 'کەبابی کوردی',
                     'name_ar' => 'كباب كردي',
                     'description' => 'Traditional Kurdish grilled meat kebab with fresh vegetables and bread',
-                    'description_ku' => 'کەبابی گۆشتی برژاوی کوردی لەگەڵ سەوزە تازەکان و نان',
+                    'description_ckb' => 'کەبابی گۆشتی برژاوی کوردی لەگەڵ سەوزە تازەکان و نان',
                     'description_ar' => 'كباب اللحم الكردي المشوي التقليدي مع الخضار الطازجة والخبز',
                     'category_id' => 1,
                     'store_id' => 1,
@@ -334,10 +331,10 @@ class MultilingualImportService
                 ],
                 [
                     'name' => 'Dolma (Stuffed Vegetables)',
-                    'name_ku' => 'دۆڵمە (سەوزەی پڕکراو)',
+                    'name_ckb' => 'دۆڵمە (سەوزەی پڕکراو)',
                     'name_ar' => 'دولما (خضار محشية)',
                     'description' => 'Traditional stuffed vegetables with rice, herbs, and spices',
-                    'description_ku' => 'سەوزەی پڕکراوی تەقلیدی لەگەڵ برنج و گیا و بەهارات',
+                    'description_ckb' => 'سەوزەی پڕکراوی تەقلیدی لەگەڵ برنج و گیا و بەهارات',
                     'description_ar' => 'خضار محشية تقليدية بالأرز والأعشاب والبهارات',
                     'category_id' => 2,
                     'store_id' => 1,
@@ -349,10 +346,10 @@ class MultilingualImportService
                 ],
                 [
                     'name' => 'Baklava Dessert',
-                    'name_ku' => 'شیرینی بەقلاوە',
+                    'name_ckb' => 'شیرینی بەقلاوە',
                     'name_ar' => 'حلوى البقلاوة',
                     'description' => 'Sweet layered pastry with nuts and honey syrup',
-                    'description_ku' => 'شیرینی چین چین لەگەڵ گوێز و شلی هەنگوین',
+                    'description_ckb' => 'شیرینی چین چین لەگەڵ گوێز و شلی هەنگوین',
                     'description_ar' => 'معجنات حلوة متعددة الطبقات بالمكسرات وشراب العسل',
                     'category_id' => 3,
                     'store_id' => 2,
@@ -364,10 +361,10 @@ class MultilingualImportService
                 ],
                 [
                     'name' => 'Kurdish Tea (Chai)',
-                    'name_ku' => 'چای کوردی',
+                    'name_ckb' => 'چای کوردی',
                     'name_ar' => 'شاي كردي',
                     'description' => 'Traditional Kurdish black tea served in glass cups with sugar',
-                    'description_ku' => 'چای ڕەشی تەقلیدی کوردی کە لە کوپی شووشەدا دەخرێتە ڕوو لەگەڵ شەکر',
+                    'description_ckb' => 'چای ڕەشی تەقلیدی کوردی کە لە کوپی شووشەدا دەخرێتە ڕوو لەگەڵ شەکر',
                     'description_ar' => 'شاي أسود كردي تقليدي يُقدم في أكواب زجاجية مع السكر',
                     'category_id' => 4,
                     'store_id' => 3,
@@ -381,7 +378,7 @@ class MultilingualImportService
             'Category' => [
                 [
                     'name' => 'Main Dishes',
-                    'name_ku' => 'خواردنە سەرەکییەکان', 
+                    'name_ckb' => 'خواردنە سەرەکییەکان', 
                     'name_ar' => 'الأطباق الرئيسية',
                     'parent_id' => 0,
                     'position' => 1,

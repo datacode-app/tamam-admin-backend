@@ -20,7 +20,7 @@ return new class extends Migration
             $table->id();
             
             // Language identification
-            $table->string('code', 10)->unique(); // e.g., 'ar', 'ckb', 'ku', 'en'
+            $table->string('code', 10)->unique(); // e.g., 'ar', 'ckb', 'en'
             $table->string('name', 100); // e.g., 'Arabic', 'Kurdish Sorani', 'Kurdish'
             $table->string('native_name', 100); // e.g., 'العربية', 'کوردی سۆرانی'
             
@@ -36,7 +36,7 @@ return new class extends Migration
             $table->integer('sort_order')->default(0);
             
             // Aliases for compatibility
-            $table->json('aliases')->nullable(); // ['ku', 'kmr', 'sorani'] for 'ckb'
+            $table->json('aliases')->nullable(); // ['kurdish', 'sorani'] for 'ckb'
             
             $table->timestamps();
             
@@ -106,7 +106,7 @@ return new class extends Migration
                 'is_default' => false,
                 'is_fallback' => true,
                 'sort_order' => 3,
-                'aliases' => json_encode(['ku', 'kmr', 'kurdish', 'sorani', 'ku_IQ', 'ckb_IQ']),
+                'aliases' => json_encode(['kurdish', 'sorani', 'ckb_IQ']),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

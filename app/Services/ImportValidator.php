@@ -35,8 +35,8 @@ class ImportValidator
     ];
 
     private $multilingualFields = [
-        'name' => ['name_ku', 'name_ckb', 'name_ar'],
-        'address' => ['address_ku', 'address_ckb', 'address_ar', 'Address_ku', 'Address_ar']
+        'name' => ['name_ckb', 'name_ar'],
+        'address' => ['address_ckb', 'address_ar', 'Address_ckb', 'Address_ar']
     ];
 
     /**
@@ -156,7 +156,7 @@ class ImportValidator
         }
 
         if (!$multilingualFound) {
-            $result['warnings'][] = "No multilingual columns detected. Ensure columns like 'name_ku', 'name_ar', 'address_ku', 'address_ar' are present for multilingual support.";
+            $result['warnings'][] = "No multilingual columns detected. Ensure columns like 'name_ckb', 'name_ar', 'address_ckb', 'address_ar' are present for multilingual support.";
         }
 
         // Validate data in first few rows (warnings only)
