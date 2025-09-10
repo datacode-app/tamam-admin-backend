@@ -1,0 +1,57 @@
+
+   INFO  Server running on [http://0.0.0.0:8000].  
+
+  Press Ctrl+C to stop the server
+
+   WARN  PHP Deprecated: Laravel\Passport\Passport::tokensExpireIn(): Implicitly marking parameter $date as nullable is deprecated, the explicit nullable type must be used instead in vendor/laravel/passport/src/Passport.php on line 282.  
+
+   WARN  PHP Deprecated: Laravel\Passport\Passport::refreshTokensExpireIn(): Implicitly marking parameter $date as nullable is deprecated, the explicit nullable type must be used instead in vendor/laravel/passport/src/Passport.php on line 299.  
+
+   WARN  PHP Deprecated: Laravel\Passport\Passport::personalAccessTokensExpireIn(): Implicitly marking parameter $date as nullable is deprecated, the explicit nullable type must be used instead in vendor/laravel/passport/src/Passport.php on line 316.  
+
+   WARN  PHP Deprecated: Nwidart\Modules\Json::__construct(): Implicitly marking parameter $filesystem as nullable is deprecated, the explicit nullable type must be used instead in vendor/nwidart/laravel-modules/src/Json.php on line 37.  
+
+   WARN  PHP Deprecated: Nwidart\Modules\Json::make(): Implicitly marking parameter $filesystem as nullable is deprecated, the explicit nullable type must be used instead in vendor/nwidart/laravel-modules/src/Json.php on line 100.  
+
+   WARN  PHP Deprecated: Nwidart\Modules\Json::toJsonPretty(): Implicitly marking parameter $data as nullable is deprecated, the explicit nullable type must be used instead in vendor/nwidart/laravel-modules/src/Json.php on line 145.  
+
+  2025-09-10 23:11:50 .................................................. ~ 12s
+  2025-09-10 23:12:26 .................................................. ~ 13s
+  2025-09-10 23:12:26 .................................................. ~ 13s
+  2025-09-10 23:12:39 /assets/landing/css/bootstrap.min.css ............. ~ 0s
+  2025-09-10 23:12:39 /assets/landing/css/customize-animate.css ......... ~ 0s
+  2025-09-10 23:12:39 /assets/landing/css/odometer.css .................. ~ 0s
+  2025-09-10 23:12:39 /assets/landing/css/owl.min.css ................... ~ 0s
+  2025-09-10 23:12:39 /assets/admin/css/toastr.css ...................... ~ 0s
+  2025-09-10 23:12:39 /assets/landing/css/main.css ...................... ~ 0s
+  2025-09-10 23:12:39 /assets/admin/intltelinput/css/intlTelInput.css ... ~ 0s
+  2025-09-10 23:12:39 /assets/admin/img/favicon.png ..................... ~ 0s
+  2025-09-10 23:12:39 /assets/landing/img/main-banner.svg ............... ~ 0s
+  2025-09-10 23:12:39 ................................................... ~ 3s
+  2025-09-10 23:12:42 /assets/admin/img/100x100/2.jpg ................... ~ 0s
+  2025-09-10 23:12:42 /assets/landing/js/jquery-3.6.0.min.js ............ ~ 0s
+  2025-09-10 23:12:42 /assets/landing/js/bootstrap.min.js ............... ~ 0s
+  2025-09-10 23:12:42 /assets/landing/js/viewport.jquery.js ............. ~ 0s
+  2025-09-10 23:12:42 /assets/landing/js/wow.min.js ..................... ~ 0s
+  2025-09-10 23:12:42 /assets/landing/js/odometer.min.js ................ ~ 0s
+  2025-09-10 23:12:42 /assets/landing/js/owl.min.js ..................... ~ 0s
+  2025-09-10 23:12:42 /assets/landing/js/main.js ........................ ~ 0s
+  2025-09-10 23:12:42 /assets/admin/js/toastr.js ........................ ~ 0s
+  2025-09-10 23:12:42 /assets/admin/intltelinput/js/intlTelInput.min.js . ~ 0s
+  2025-09-10 23:12:42 /assets/landing/img/google-play.png ............... ~ 0s
+  2025-09-10 23:12:42 /assets/landing/js/viewport.jquery.js ............. ~ 0s
+  2025-09-10 23:12:42 /assets/landing/img/apple-store.png ............... ~ 0s
+  2025-09-10 23:12:42 /assets/landing/img/google.svg .................... ~ 0s
+  2025-09-10 23:12:42 /assets/landing/img/apple.svg ..................... ~ 0s
+  2025-09-10 23:12:42 /assets/landing/css/img/counter-shape.png ......... ~ 0s
+  2025-09-10 23:12:42 /assets/landing/img/learn-feature-bg.svg .......... ~ 0s
+  2025-09-10 23:12:42 /assets/landing/img/main-banner.svg ............... ~ 0s
+  2025-09-10 23:12:43 /assets/admin/img/favicon.png ..................... ~ 0s
+  2025-09-10 23:12:43 /assets/landing/js/wow.min.js ..................... ~ 0s
+  2025-09-10 23:12:43 /assets/landing/js/odometer.min.js ................ ~ 0s
+  2025-09-10 23:12:43 /assets/landing/js/jquery-3.6.0.min.js ............ ~ 0s
+  2025-09-10 23:12:43 /assets/landing/js/bootstrap.min.js ............... ~ 0s
+  2025-09-10 23:12:43 /assets/landing/js/owl.min.js ..................... ~ 0s
+  2025-09-10 23:12:43 /assets/landing/js/main.js ........................ ~ 0s
+  2025-09-10 23:12:43 /assets/admin/js/toastr.js ........................ ~ 0s
+  2025-09-10 23:12:43 /assets/admin/intltelinput/js/intlTelInput.min.js . ~ 0s
