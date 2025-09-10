@@ -18,7 +18,7 @@
                 <div class="col-sm mb-2 mb-sm-0">
                     <h1 class="page-header-title">
                         <span class="page-header-icon">
-                            <img src="{{ asset('assets/admin/img/logo.png') }}" class="w--20" alt="">
+                            <img src="{{ asset('assets/admin/img/car-logo.png') }}" class="w--20" alt="">
                         </span>
                         <span>
                             {{ translate('trips_details') }}
