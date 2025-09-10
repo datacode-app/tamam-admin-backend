@@ -1,2 +1,3 @@
 - remember to deploy to staging server we use deploy-to-staging.sh
 - remember to always clean the test and verification files or notes you took while working on the project so we have a clean root directory for all projects
+- we should always use the remote data cluster and o3 storage from digital ocean
