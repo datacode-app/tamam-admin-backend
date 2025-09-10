@@ -21,8 +21,13 @@ class MultilingualExportService
     {
         $multilingualData = [];
         
-        // Get translations relationship (could be null if no translations exist)
-        $translations = $model->translations ?? null;
+        // Get ALL translations directly from database, bypassing global scopes
+        $translations = \DB::table('translations')
+            ->where('translationable_type', get_class($model))
+            ->where('translationable_id', $model->id)
+            ->where('is_active', true)
+            ->get(['locale', 'key', 'value'])
+            ->toArray();
         
         if (!$translations || (is_countable($translations) && count($translations) === 0)) {
             // No translations exist - create empty multilingual fields
@@ -37,15 +42,12 @@ class MultilingualExportService
             return $multilingualData;
         }
         
-        // Process existing translations
-        $translationsArray = is_array($translations) ? $translations : $translations->toArray();
-        
-        // Group translations by field and language
+        // Process existing translations (direct database results)
         $groupedTranslations = [];
-        foreach ($translationsArray as $translation) {
-            $key = $translation['key'] ?? '';
-            $locale = $translation['locale'] ?? '';
-            $value = $translation['value'] ?? '';
+        foreach ($translations as $translation) {
+            $key = $translation->key ?? '';
+            $locale = $translation->locale ?? '';
+            $value = $translation->value ?? '';
             
             if ($key && $locale) {
                 $groupedTranslations[$key][$locale] = $value;
