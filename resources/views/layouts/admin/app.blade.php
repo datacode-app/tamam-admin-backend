@@ -30,6 +30,9 @@ $countryCode= strtolower($country?$country->value:'auto');
     <link rel="stylesheet" href="{{asset('assets/admin/css/style.css')}}">
 
     <link rel="stylesheet" href="{{asset('assets/admin/intltelinput/css/intlTelInput.css')}}">
+    
+    <!-- Lucide Icons -->
+    <link rel="stylesheet" href="https://unpkg.com/lucide@latest/dist/umd/lucide.css">
 
     @stack('css_or_js')
 
@@ -810,6 +813,15 @@ $(document).on('keyup', 'input[type="tel"]', function () {
 
 <script>
     if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('assets/admin')}}/vendor/babel-polyfill/polyfill.min.js"><\/script>');
+</script>
+
+<!-- Lucide Icons JS -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script>
+    // Initialize Lucide icons after DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        lucide.createIcons();
+    });
 </script>
 </body>
 </html>

@@ -48,7 +48,7 @@
                     <!-- Dashboards -->
                     <li class="navbar-vertical-aside-has-menu {{ Request::is('admin') ? 'show active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.dashboard') }}?module_id={{Config::get('module.current_module_id')}}" title="{{ translate('messages.dashboard') }}">
-                            <i class="tio-home-vs-1-outlined nav-icon"></i>
+                            <i data-lucide="home" class="nav-icon lucide-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                 {{ translate('messages.dashboard') }}
                             </span>
@@ -64,7 +64,7 @@
                     @if(\App\CentralLogics\Helpers::module_permission_check('pos'))
                     <li class="navbar-vertical-aside-has-menu {{Request::is('admin/pos*')?'active':''}}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link " href="{{route('admin.pos.index')}}" title="{{translate('New Sale')}}">
-                            <i class="tio-shopping-basket-outlined nav-icon"></i>
+                            <i data-lucide="shopping-cart" class="nav-icon lucide-icon"></i>
                             <span class="text-truncate">{{translate('New Sale')}}</span>
                         </a>
                     </li>
@@ -80,7 +80,7 @@
 
                     <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/order') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.orders') }}">
-                            <i class="tio-shopping-cart nav-icon"></i>
+                            <i data-lucide="package" class="nav-icon lucide-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                 {{ translate('messages.orders') }}
                             </span>
@@ -218,7 +218,7 @@
                     class="navbar-vertical-aside-has-menu {{ Request::is('admin/refund/*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
                         title="{{ translate('Order Refunds') }}">
-                        <i class="tio-receipt nav-icon"></i>
+                        <i data-lucide="receipt" class="nav-icon lucide-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                             {{ translate('Order Refunds') }}
                         </span>
@@ -266,7 +266,7 @@
                 @if (\App\CentralLogics\Helpers::module_permission_check('campaign'))
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/campaign') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.campaigns') }}">
-                        <i class="tio-layers-outlined nav-icon"></i>
+                        <i data-lucide="layers" class="nav-icon lucide-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.campaigns') }}</span>
                     </a>
                     <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/campaign*') ? 'block' : 'none' }}">
@@ -291,13 +291,13 @@
                 @if (\App\CentralLogics\Helpers::module_permission_check('banner'))
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/banner*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.banner.add-new') }}" title="{{ translate('messages.banners') }}">
-                        <i class="tio-image nav-icon"></i>
+                        <i data-lucide="image" class="nav-icon lucide-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.banners') }}</span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/promotional-banner*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.promotional-banner.add-new') }}" title="{{ translate('messages.other_banners') }}">
-                        <i class="tio-image nav-icon"></i>
+                        <i data-lucide="image" class="nav-icon lucide-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.other_banners') }}</span>
                     </a>
                 </li>
@@ -307,7 +307,7 @@
                 @if (\App\CentralLogics\Helpers::module_permission_check('coupon'))
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/coupon*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.coupon.add-new') }}" title="{{ translate('messages.coupons') }}">
-                        <i class="tio-gift nav-icon"></i>
+                        <i data-lucide="gift" class="nav-icon lucide-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.coupons') }}</span>
                     </a>
                 </li>
@@ -317,7 +317,7 @@
                 @if (\App\CentralLogics\Helpers::module_permission_check('notification'))
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/notification*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.notification.add-new') }}" title="{{ translate('messages.push_notification') }}">
-                        <i class="tio-notifications nav-icon"></i>
+                        <i data-lucide="bell" class="nav-icon lucide-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                             {{ translate('messages.push_notification') }}
                         </span>
@@ -333,7 +333,7 @@
                     class="navbar-vertical-aside-has-menu  @yield('advertisement')">
                     <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
                         title="{{ translate('messages.advertisement') }}">
-                        <i class="tio-tv-old nav-icon"></i>
+                        <i data-lucide="monitor" class="nav-icon lucide-icon"></i>
                         <span
                             class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.advertisement') }}</span>
                     </a>
@@ -377,7 +377,7 @@
                     @if (\App\CentralLogics\Helpers::module_permission_check('category'))
                     <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/category*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.categories') }}">
-                                <i class="tio-category nav-icon"></i>
+                                <i data-lucide="folder" class="nav-icon lucide-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.categories') }}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"  style="display:{{ Request::is('admin/category*') ? 'block' : 'none' }}">
@@ -442,7 +442,7 @@
                 @if (\App\CentralLogics\Helpers::module_permission_check('addon'))
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/addon*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.addons') }}">
-                        <i class="tio-add-circle-outlined nav-icon"></i>
+                        <i data-lucide="plus-circle" class="nav-icon lucide-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.addons') }}</span>
                     </a>
                     <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/addon*') ? 'block' : 'none' }}">
@@ -473,7 +473,7 @@
                 @if (\App\CentralLogics\Helpers::module_permission_check('item'))
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/item*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('Food Setup') }}">
-                        <i class="tio-premium-outlined nav-icon"></i>
+                        <i data-lucide="chef-hat" class="nav-icon lucide-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate text-capitalize">{{ translate('Food Setup') }}</span>
                     </a>
                     <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/item*') ? 'block' : 'none' }}">
@@ -537,7 +537,7 @@
                 @if (\App\CentralLogics\Helpers::module_permission_check('store'))
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store/pending-requests') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.pending-requests') }}" title="{{ translate('messages.new_restaurants') }}">
-                        <span class="tio-calendar-note nav-icon"></span>
+                        <i data-lucide="calendar" class="nav-icon lucide-icon"></i>
                         <span class="text-truncate position-relative overflow-visible">
                             {{ translate('messages.new_restaurants') }}
                             @php($new_str = \App\Models\Store::whereHas('vendor', function($query){
@@ -552,7 +552,7 @@
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store/add') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.add') }}" title="{{ translate('add new restaurant') }}">
-                        <span class="tio-add-circle nav-icon"></span>
+                        <i data-lucide="plus-circle" class="nav-icon lucide-icon"></i>
                         <span class="text-truncate position-relative overflow-visible">
                             {{ translate('add new restaurant') }}
                         </span>
@@ -560,7 +560,7 @@
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store/list') ||  Request::is('admin/store/view/*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.list') }}" title="{{ translate('messages.restaurants_list') }}">
-                        <span class="tio-layout nav-icon"></span>
+                        <i data-lucide="grid-3x3" class="nav-icon lucide-icon"></i>
                         <span class="text-truncate">{{ translate('messages.restaurants') }}
                             {{ translate('list') }}</span>
                     </a>
@@ -568,19 +568,19 @@
 
                 <li class="navbar-item {{ Request::is('admin/store/recommended-store') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.recommended_store') }}" title="{{ translate('messages.pending_requests') }}">
-                        <span class="tio-hot  nav-icon"></span>
+                        <i data-lucide="star" class="nav-icon lucide-icon"></i>
                         <span class="text-truncate text-capitalize">{{ translate('Recommended_Restaurants') }}</span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store/bulk-import') ? 'active' : '' }}">
                     <a class="nav-link " href="{{ route('admin.store.bulk-import') }}" title="{{ translate('messages.bulk_import') }}">
-                        <span class="tio-publish nav-icon"></span>
+                        <i data-lucide="upload" class="nav-icon lucide-icon"></i>
                         <span class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store/bulk-export') ? 'active' : '' }}">
                     <a class="nav-link " href="{{ route('admin.store.bulk-export-index') }}" title="{{ translate('messages.bulk_export') }}">
-                        <span class="tio-download-to nav-icon"></span>
+                        <i data-lucide="download" class="nav-icon lucide-icon"></i>
                         <span class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
                     </a>
                 </li>
