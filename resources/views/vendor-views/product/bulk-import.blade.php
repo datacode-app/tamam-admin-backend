@@ -68,22 +68,22 @@
                     <h3 class="mb-3 export--template-title">{{translate('download_spreadsheet_template')}}</h3>
                     <div class="btn--container justify-content-center export--template-btns">
                         <!-- Standard Templates -->
-                        @if ($store_data->module->module_type == 'food')
-                            <a href="{{asset('assets/restaurant_panel/foods_bulk_format.xlsx')}}" download="" class="btn btn-dark">{{translate('template_with_existing_data')}}</a>
-                        @else
-                            <a href="{{asset('assets/restaurant_panel/items_bulk_format.xlsx')}}" download="" class="btn btn-dark">{{translate('template_with_existing_data')}}</a>
-                        @endif
-
-                        <a href="{{asset('assets/restaurant_panel/items_bulk_format_nodata.xlsx')}}" download="" class="btn btn-dark">{{translate('template_without_data')}}</a>
-                        
                         <!-- Multilingual Templates -->
-                        <a href="{{route('vendor.item.bulk-import')}}?download=template&type=multilang" class="btn btn-success">
-                            <i class="tio-world"></i> {{translate('multilingual_template')}}
+                        <div class="mb-2">
+                            <strong class="text-success">{{translate('Multilingual Templates')}}</strong>
+                            <small class="text-muted d-block">{{translate('Supports All Languages: English, Arabic, Kurdish, Bengali, etc.')}}</small>
+                        </div>
+                        <a href="{{asset('assets/items_multilingual_template.xlsx')}}" download="" class="btn btn-success me-2">
+                            <i class="tio-world"></i> {{translate('With Sample Data (.xlsx)')}}
                         </a>
-                        
-                        <a href="{{route('vendor.item.bulk-import')}}?download=template" class="btn btn-info">
-                            <i class="tio-download"></i> {{translate('simple_template')}}
+                        <a href="{{asset('assets/items_multilingual_empty_template.xlsx')}}" download="" class="btn btn-success me-2">
+                            <i class="tio-download"></i> {{translate('Empty Template (.xlsx)')}}
                         </a>
+                        <div class="w-100 mt-2">
+                            <small class="text-muted">{{translate('CSV versions:')}}</small>
+                            <a href="{{asset('assets/items_multilingual_template.csv')}}" download="" class="btn btn-sm btn-outline-success me-1">{{translate('CSV')}}</a>
+                            <a href="{{asset('assets/items_multilingual_empty_template.csv')}}" download="" class="btn btn-sm btn-outline-success">{{translate('Empty CSV')}}</a>
+                        </div>
                     </div>
                 </div>
             </div>
