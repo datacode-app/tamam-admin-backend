@@ -161,7 +161,12 @@ class ParcelCategoryController extends Controller
      */
     public function edit($id)
     {
-        $parcel_category= ParcelCategory::withoutGlobalScope('translate')->findOrFail($id);
+        $parcel_category = ParcelCategory::withoutGlobalScopes()->findOrFail($id);
+        // Load ALL translations directly
+        $translations = \App\Models\Translation::where('translationable_type', 'App\\Models\\ParcelCategory')
+            ->where('translationable_id', $id)
+            ->get();
+        $parcel_category->setRelation('translations', $translations);
         return view('admin-views.parcel.category.edit',compact('parcel_category'));
     }
 

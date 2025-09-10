@@ -792,12 +792,22 @@ class CampaignController extends Controller
     {
         if($type=='basic')
         {
-            $campaign = Campaign::withoutGlobalScope('translate')->findOrFail($campaign);
+            $campaign = Campaign::withoutGlobalScopes()->findOrFail($campaign);
+            // Load ALL translations directly
+            $translations = \App\Models\Translation::where('translationable_type', 'App\\Models\\Campaign')
+                ->where('translationable_id', $campaign)
+                ->get();
+            $campaign->setRelation('translations', $translations);
             return view('admin-views.campaign.'.$type.'.edit', compact('campaign'));
         }
         else
         {
-            $campaign = ItemCampaign::withoutGlobalScope('translate')->findOrFail($campaign);
+            $campaign = ItemCampaign::withoutGlobalScopes()->findOrFail($campaign);
+            // Load ALL translations directly  
+            $translations = \App\Models\Translation::where('translationable_type', 'App\\Models\\ItemCampaign')
+                ->where('translationable_id', $campaign)
+                ->get();
+            $campaign->setRelation('translations', $translations);
             $temp = $campaign->category;
             if($temp?->position)
             {

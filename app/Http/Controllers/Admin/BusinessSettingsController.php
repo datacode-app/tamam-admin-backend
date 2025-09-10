@@ -4368,7 +4368,12 @@ class BusinessSettingsController extends Controller
 
     public function promotional_edit($id)
     {
-        $banner = AdminPromotionalBanner::withoutGlobalScope('translate')->findOrFail($id);
+        $banner = AdminPromotionalBanner::withoutGlobalScopes()->findOrFail($id);
+        // Load ALL translations directly
+        $translations = \App\Models\Translation::where('translationable_type', 'App\\Models\\AdminPromotionalBanner')
+            ->where('translationable_id', $id)
+            ->get();
+        $banner->setRelation('translations', $translations);
         return view('admin-views.business-settings.landing-page-settings.admin-promotional-section-edit', compact('banner'));
     }
 
@@ -4473,7 +4478,12 @@ class BusinessSettingsController extends Controller
 
     public function feature_edit($id)
     {
-        $feature = AdminFeature::withoutGlobalScope('translate')->findOrFail($id);
+        $feature = AdminFeature::withoutGlobalScopes()->findOrFail($id);
+        // Load ALL translations directly
+        $translations = \App\Models\Translation::where('translationable_type', 'App\\Models\\AdminFeature')
+            ->where('translationable_id', $id)
+            ->get();
+        $feature->setRelation('translations', $translations);
         return view('admin-views.business-settings.landing-page-settings.admin-feature-list-edit', compact('feature'));
     }
 

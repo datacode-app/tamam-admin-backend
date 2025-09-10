@@ -90,7 +90,12 @@ class FlashSaleController extends Controller
      */
     public function edit($id)
     {
-        $flash_sale = FlashSale::withoutGlobalScope('translate')->findOrFail($id);
+        $flash_sale = FlashSale::withoutGlobalScopes()->findOrFail($id);
+        // Load ALL translations directly
+        $translations = \App\Models\Translation::where('translationable_type', 'App\\Models\\FlashSale')
+            ->where('translationable_id', $id)
+            ->get();
+        $flash_sale->setRelation('translations', $translations);
         return view('admin-views.flash-sale.edit', compact('flash_sale'));
     }
 
