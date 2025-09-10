@@ -78,9 +78,9 @@ return [
             'prefix_indexes' => true,
             'schema' => 'public',
             'sslmode' => env('DB_SSLMODE', 'disable'),
-            'options' => [
+            'options' => extension_loaded('pdo_pgsql') ? [
                 PDO::PGSQL_ATTR_DISABLE_PREPARES => true,
-            ],
+            ] : [],
         ],
 
         'sqlsrv' => [

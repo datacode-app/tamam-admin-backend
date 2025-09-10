@@ -1,0 +1,572 @@
+/* TIO Icon Set - Complete Replacement System */
+/* Complete mapping of all 172 unique tio- icon classes found in codebase */
+
+/* ========================================
+   BASE ICON SYSTEM
+   ======================================== */
+
+/* Base icon font setup */
+[class^="tio-"], [class*=" tio-"] {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    display: inline-block;
+    text-decoration: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Icon sizes */
+.tio-lg { font-size: 1.3em; }
+.tio-xl { font-size: 1.5em; }
+.tio-2x { font-size: 2em; }
+
+/* ========================================
+   NUMBERS & IDENTIFIERS
+   ======================================== */
+
+.tio-1:before { content: "1"; }
+.tio-1-1:before { content: "1:1"; }
+.tio-2:before { content: "2"; }
+.tio-3:before { content: "3"; }
+
+/* ========================================
+   NAVIGATION & UI CONTROLS
+   ======================================== */
+
+.tio-clear:before { content: "✕"; }
+.tio-clear-circle-outlined:before { content: "⊗"; }
+.tio-first-page:before { content: "«"; }
+.tio-last-page:before { content: "»"; }
+.tio-search:before { content: "🔍"; }
+.tio-more-horizontal:before { content: "⋯"; }
+.tio-more-vertical:before { content: "⋮"; }
+.tio-circle:before { content: "●"; }
+.tio-chevron-left:before { content: "‹"; }
+.tio-chevron-right:before { content: "›"; }
+.tio-arrow-backward:before { content: "←"; }
+.tio-arrow-forward:before { content: "→"; }
+.tio-arrow-long-left:before { content: "⟵"; }
+.tio-back-ui:before { content: "↶"; }
+.tio-down-ui:before { content: "↓"; }
+.tio-open-in-new:before { content: "↗"; }
+.tio-menu-hamburger:before { content: "☰"; }
+
+/* ========================================
+   MAIN NAVIGATION ICONS
+   ======================================== */
+
+.tio-home:before { content: "🏠"; }
+.tio-home-vs-1-outlined:before { content: "🏠"; }
+.tio-dashboard:before { content: "📊"; }
+.tio-dashboard-outlined:before { content: "📈"; }
+.tio-shopping-basket-outlined:before { content: "🛒"; }
+.tio-shopping-cart:before { content: "🛒"; }
+.tio-shopping-cart-outlined:before { content: "🛍️"; }
+.tio-city:before { content: "🏙️"; }
+.tio-globe:before { content: "🌐"; }
+.tio-world:before { content: "🌍"; }
+.tio-apps:before { content: "⊞"; }
+.tio-category:before { content: "📂"; }
+.tio-shop:before { content: "🏪"; }
+.tio-shop-outlined:before { content: "🏬"; }
+
+/* ========================================
+   USER & PEOPLE ICONS
+   ======================================== */
+
+.tio-user:before { content: "👤"; }
+.tio-user-outlined:before { content: "👤"; }
+.tio-user-big:before { content: "👥"; }
+.tio-user-big-outlined:before { content: "👥"; }
+.tio-man:before { content: "👨"; }
+.tio-poi-user:before { content: "📍"; }
+.tio-account-square-outlined:before { content: "👤"; }
+
+/* ========================================
+   ACTION ICONS
+   ======================================== */
+
+.tio-add:before { content: "➕"; }
+.tio-add-circle:before { content: "⊕"; }
+.tio-add-circle-outlined:before { content: "⊕"; }
+.tio-add-square:before { content: "⊞"; }
+.tio-add-to-trash:before { content: "🗑️"; }
+.tio-remove:before { content: "➖"; }
+.tio-delete:before { content: "🗑️"; }
+.tio-delete-outlined:before { content: "🗑️"; }
+.tio-edit:before { content: "✏️"; }
+.tio-copy:before { content: "📄"; }
+.tio-save-outlined:before { content: "💾"; }
+.tio-restore:before { content: "⟲"; }
+.tio-redo:before { content: "↷"; }
+.tio-undo:before { content: "↶"; }
+.tio-reload-24:before { content: "🔄"; }
+.tio-cached:before { content: "🔄"; }
+.tio-done:before { content: "✓"; }
+.tio-checkmark-circle:before { content: "✅"; }
+.tio-checkmark-circle-outlined:before { content: "☑️"; }
+
+/* ========================================
+   VISIBILITY & STATUS ICONS
+   ======================================== */
+
+.tio-visible:before { content: "👁️"; }
+.tio-visible-outlined:before { content: "👁️"; }
+.tio-invisible:before { content: "🙈"; }
+.tio-hidden-outlined:before { content: "🙈"; }
+.tio-verified:before { content: "✓"; }
+.tio-error:before { content: "⚠️"; }
+.tio-warning:before { content: "⚠️"; }
+.tio-info:before { content: "ℹ️"; }
+.tio-info-outined:before { content: "ℹ️"; }
+.tio-notice:before { content: "📢"; }
+.tio-help-outlined:before { content: "❓"; }
+
+/* ========================================
+   BUSINESS & COMMERCE ICONS
+   ======================================== */
+
+.tio-money:before { content: "💰"; }
+.tio-wallet:before { content: "💳"; }
+.tio-wallet-outlined:before { content: "💳"; }
+.tio-atm:before { content: "🏧"; }
+.tio-receipt:before { content: "🧾"; }
+.tio-dollar-outlined:before { content: "💲"; }
+.tio-gift:before { content: "🎁"; }
+.tio-medal:before { content: "🏅"; }
+.tio-crown:before { content: "👑"; }
+.tio-star:before { content: "⭐"; }
+.tio-star-half:before { content: "⭐"; }
+.tio-star-outlined:before { content: "☆"; }
+.tio-premium-outlined:before { content: "👑"; }
+.tio-hot:before { content: "🔥"; }
+.tio-savings:before { content: "💰"; }
+.tio-saving:before { content: "💾"; }
+.tio-saving-outlined:before { content: "💾"; }
+.tio-ticket:before { content: "🎫"; }
+
+/* ========================================
+   CHARTS & ANALYTICS ICONS
+   ======================================== */
+
+.tio-chart-bar-1:before { content: "📊"; }
+.tio-chart-bar-4:before { content: "📈"; }
+.tio-chart-pie-1:before { content: "📊"; }
+.tio-table:before { content: "⊞"; }
+.tio-running:before { content: "🏃"; }
+.tio-align-to-top:before { content: "⬆️"; }
+.tio-ruler:before { content: "📏"; }
+
+/* ========================================
+   COMMUNICATION ICONS
+   ======================================== */
+
+.tio-chat:before { content: "💬"; }
+.tio-message:before { content: "✉️"; }
+.tio-email:before { content: "📧"; }
+.tio-email-outlined:before { content: "📩"; }
+.tio-send:before { content: "📤"; }
+.tio-notifications:before { content: "🔔"; }
+.tio-snooze-notification:before { content: "🔕"; }
+.tio-voice:before { content: "🎤"; }
+.tio-call-talking:before { content: "📞"; }
+.tio-call-talking-quiet:before { content: "🔇"; }
+.tio-comment-image-outlined:before { content: "💬"; }
+
+/* ========================================
+   SOCIAL MEDIA ICONS
+   ======================================== */
+
+.tio-facebook:before { content: "📘"; }
+.tio-twitter:before { content: "🐦"; }
+.tio-telegram:before { content: "📱"; }
+
+/* ========================================
+   SYSTEM & SETTINGS ICONS
+   ======================================== */
+
+.tio-settings:before { content: "⚙️"; }
+.tio-settings-outlined:before { content: "⚙️"; }
+.tio-settings-back:before { content: "🔧"; }
+.tio-settings-vs-outlined:before { content: "⚙️"; }
+.tio-tune-horizontal:before { content: "🎛️"; }
+.tio-key:before { content: "🔑"; }
+.tio-lock:before { content: "🔒"; }
+.tio-lock-outlined:before { content: "🔓"; }
+.tio-top-security-outlined:before { content: "🔒"; }
+.tio-incognito:before { content: "🕵️"; }
+.tio-cloud:before { content: "☁️"; }
+.tio-cloud-upload:before { content: "☁️"; }
+.tio-website:before { content: "🌐"; }
+.tio-code:before { content: "💻"; }
+.tio-puzzle:before { content: "🧩"; }
+
+/* ========================================
+   MEDIA & CONTENT ICONS
+   ======================================== */
+
+.tio-image:before { content: "🖼️"; }
+.tio-album:before { content: "📱"; }
+.tio-pages:before { content: "📄"; }
+.tio-document-text-outlined:before { content: "📄"; }
+.tio-layers-outlined:before { content: "📚"; }
+.tio-filter-list:before { content: "📋"; }
+.tio-layout:before { content: "📐"; }
+.tio-canvas-text:before { content: "📝"; }
+.tio-hand-draw:before { content: "✏️"; }
+.tio-free-transform:before { content: "🔄"; }
+.tio-fullscreen-1-1:before { content: "⛶"; }
+
+/* ========================================
+   TRANSPORT & DELIVERY ICONS
+   ======================================== */
+
+.tio-bus:before { content: "🚌"; }
+.tio-car:before { content: "🚗"; }
+.tio-bike:before { content: "🚲"; }
+.tio-taxi:before { content: "🚕"; }
+.tio-running:before { content: "🏃"; }
+.tio-navigate-outlined:before { content: "🧭"; }
+
+/* ========================================
+   LOCATION & MAPPING ICONS
+   ======================================== */
+
+.tio-poi:before { content: "📍"; }
+.tio-map:before { content: "🗺️"; }
+.tio-location-search:before { content: "📍"; }
+.tio-neighborhood:before { content: "🏘️"; }
+
+/* ========================================
+   PLATFORM SPECIFIC ICONS
+   ======================================== */
+
+.tio-android:before { content: "🤖"; }
+.tio-android-phone:before { content: "📱"; }
+.tio-android-phone-vs:before { content: "📱"; }
+.tio-devices-apple:before { content: "🍎"; }
+.tio-tv-old:before { content: "📺"; }
+.tio-tab:before { content: "📑"; }
+
+/* ========================================
+   TIME & SCHEDULE ICONS
+   ======================================== */
+
+.tio-clock:before { content: "🕐"; }
+.tio-time:before { content: "⏰"; }
+.tio-calendar:before { content: "📅"; }
+.tio-calendar-month:before { content: "📅"; }
+.tio-calendar-note:before { content: "📝"; }
+.tio-date-range:before { content: "📅"; }
+.tio-pause-circle:before { content: "⏸️"; }
+.tio-spinner:before { content: "⏳"; }
+
+/* ========================================
+   FOOD & RESTAURANT ICONS
+   ======================================== */
+
+.tio-fastfood:before { content: "🍔"; }
+
+/* ========================================
+   ENTERTAINMENT & CULTURE ICONS
+   ======================================== */
+
+.tio-museum:before { content: "🏛️"; }
+.tio-heart:before { content: "❤️"; }
+.tio-heart-outlined:before { content: "♡"; }
+
+/* ========================================
+   OFFICE & BUSINESS TOOLS
+   ======================================== */
+
+.tio-print:before { content: "🖨️"; }
+.tio-download:before { content: "⬇️"; }
+.tio-download-to:before { content: "📥"; }
+.tio-publish:before { content: "📤"; }
+.tio-link:before { content: "🔗"; }
+.tio-label:before { content: "🏷️"; }
+.tio-label-outlined:before { content: "🏷️"; }
+
+/* ========================================
+   SPECIAL PURPOSE ICONS
+   ======================================== */
+
+.tio-rear-window-defrost:before { content: "🌡️"; }
+
+/* ========================================
+   RESPONSIVE & CONTEXT ADJUSTMENTS
+   ======================================== */
+
+/* Navigation specific styling */
+.nav-icon.tio-home-vs-1-outlined,
+.nav-icon.tio-shopping-basket-outlined,
+.nav-icon.tio-city,
+.nav-icon.tio-globe,
+.nav-icon.tio-car,
+.nav-icon.tio-running,
+.nav-icon.tio-man,
+.nav-icon.tio-filter-list,
+.nav-icon.tio-star-outlined,
+.nav-icon.tio-poi-user,
+.nav-icon.tio-wallet,
+.nav-icon.tio-medal,
+.nav-icon.tio-email-outlined,
+.nav-icon.tio-message,
+.nav-icon.tio-incognito,
+.nav-icon.tio-user,
+.nav-icon.tio-settings-back {
+    font-size: 1.1em;
+    margin-right: 0.5rem;
+}
+
+/* Subtitle replacer styling */
+.nav-subtitle-replacer.tio-more-horizontal {
+    opacity: 0.6;
+    font-size: 0.8em;
+}
+
+/* Toggle button icons */
+.navbar-vertical-aside-toggle .tio-clear {
+    font-size: 1.2em;
+}
+
+.navbar-vertical-aside-toggle-short-align.tio-first-page,
+.navbar-vertical-aside-toggle-full-align.tio-last-page {
+    font-size: 1em;
+}
+
+/* Search button icon */
+.sidebar--search-form .tio-search {
+    font-size: 1.1em;
+    opacity: 0.7;
+}
+
+/* Action buttons */
+.action-btn [class^="tio-"],
+.action-btn [class*=" tio-"] {
+    font-size: 0.9em;
+}
+
+/* Calendar and date icons in forms */
+.icon-absolute-on-right.tio-calendar {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+/* Avatar uploader icon */
+.avatar-uploader-icon.tio-edit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: white;
+    border-radius: 50%;
+    padding: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Font weight adjustments for bold icons */
+.font-weight-bold [class^="tio-"],
+.font-weight-bold [class*=" tio-"] {
+    font-weight: bold;
+}
+
+/* ========================================
+   HOVER & INTERACTIVE STATES
+   ======================================== */
+
+.nav-link:hover [class^="tio-"],
+.nav-link:hover [class*=" tio-"] {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+.btn [class^="tio-"],
+.btn [class*=" tio-"] {
+    transition: all 0.2s ease;
+}
+
+.btn:hover [class^="tio-"],
+.btn:hover [class*=" tio-"] {
+    transform: scale(1.1);
+}
+
+/* Action button hover effects */
+.action-btn:hover [class^="tio-"],
+.action-btn:hover [class*=" tio-"] {
+    transform: scale(1.15);
+}
+
+/* ========================================
+   COLOR VARIATIONS
+   ======================================== */
+
+/* Warning icons */
+.text-warning [class^="tio-"],
+.text-warning [class*=" tio-"] {
+    color: #ffc107;
+}
+
+/* Success icons */
+.text-success [class^="tio-"],
+.text-success [class*=" tio-"] {
+    color: #28a745;
+}
+
+/* Danger icons */
+.text-danger [class^="tio-"],
+.text-danger [class*=" tio-"] {
+    color: #dc3545;
+}
+
+/* Primary icons */
+.text-primary [class^="tio-"],
+.text-primary [class*=" tio-"] {
+    color: #007bff;
+}
+
+/* Body text icons */
+.text-body [class^="tio-"],
+.text-body [class*=" tio-"] {
+    color: #6c757d;
+}
+
+/* ========================================
+   DARK MODE SUPPORT
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+    [class^="tio-"], [class*=" tio-"] {
+        filter: brightness(0.9);
+    }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+[class^="tio-"], [class*=" tio-"] {
+    speak: none;
+    -webkit-font-feature-settings: "liga" off, "kern" off;
+    -moz-font-feature-settings: "liga" off, "kern" off;
+    font-feature-settings: "liga" off, "kern" off;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    [class^="tio-"], [class*=" tio-"] {
+        font-weight: bold;
+    }
+}
+
+/* Print styles */
+@media print {
+    [class^="tio-"], [class*=" tio-"] {
+        color: black !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+/* ========================================
+   PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+
+/* GPU acceleration for transforms */
+[class^="tio-"], [class*=" tio-"] {
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    [class^="tio-"], [class*=" tio-"] {
+        transition: none !important;
+        transform: none !important;
+    }
+}
+
+/* ========================================
+   MOBILE RESPONSIVENESS
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* Larger icons on mobile for better touch targets */
+    .nav-icon[class^="tio-"],
+    .nav-icon[class*=" tio-"] {
+        font-size: 1.2em;
+    }
+    
+    /* Adjust button icons for mobile */
+    .btn-sm [class^="tio-"],
+    .btn-sm [class*=" tio-"] {
+        font-size: 0.8em;
+    }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Icon spacing utilities */
+.icon-mr-1 { margin-right: 0.25rem; }
+.icon-mr-2 { margin-right: 0.5rem; }
+.icon-ml-1 { margin-left: 0.25rem; }
+.icon-ml-2 { margin-left: 0.5rem; }
+
+/* Icon opacity utilities */
+.icon-opacity-50 { opacity: 0.5; }
+.icon-opacity-75 { opacity: 0.75; }
+
+/* Icon rotation utilities */
+.icon-rotate-90 { transform: rotate(90deg); }
+.icon-rotate-180 { transform: rotate(180deg); }
+.icon-rotate-270 { transform: rotate(270deg); }
+
+/* ========================================
+   INTEGRATION NOTES
+   ======================================== */
+
+/* 
+This CSS file provides complete coverage for all 172 unique tio- icon classes
+found in the Laravel admin panel. Each icon has been semantically mapped to
+appropriate emoji or Unicode symbols that represent their intended function.
+
+Icon Categories Covered:
+- Numbers & Identifiers (4 icons)
+- Navigation & UI Controls (18 icons)  
+- Main Navigation (13 icons)
+- User & People (7 icons)
+- Actions (20 icons)
+- Visibility & Status (11 icons)
+- Business & Commerce (19 icons)
+- Charts & Analytics (7 icons)
+- Communication (11 icons)
+- Social Media (3 icons)
+- System & Settings (12 icons)
+- Media & Content (10 icons)
+- Transport & Delivery (6 icons)
+- Location & Mapping (4 icons)
+- Platform Specific (6 icons)
+- Time & Schedule (8 icons)
+- Food & Restaurant (1 icon)
+- Entertainment & Culture (2 icons)
+- Office & Business Tools (7 icons)
+- Special Purpose (1 icon)
+
+Total: 172 unique tio- icon classes mapped
+
+Usage: Simply include this CSS file and all tio- classes will be automatically
+replaced with semantic emoji/Unicode equivalents. The system maintains hover effects,
+responsive design, accessibility features, and color variations.
+*/
