@@ -160,12 +160,10 @@ jobs:
             fi
           "
       
-      - name: 🗄️ Run Database Migrations
+      - name: 🗄️ Skip Database Migrations  
         run: |
-          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
-            cd /var/www/tamam &&
-            php artisan migrate --force
-          "
+          echo "ℹ️  Skipping migrations - database already populated from staging"
+          echo "✅ Migration step skipped (production database ready)"
       
       - name: 🔄 Restart Services
         run: |
