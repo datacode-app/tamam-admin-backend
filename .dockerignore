@@ -34,7 +34,6 @@ Thumbs.db
 
 # Docker
 docker-compose.override.yml
-coolify.yml
 
 # Logs
 *.log

@@ -15095,3 +15095,8 @@ ul.address-info .label {
     display: none;
 }
 
+/* Make admin sidebar menu icons smaller */
+.navbar-vertical .navbar-nav .nav-icon {
+    font-size: 0.9rem !important;
+}
+
