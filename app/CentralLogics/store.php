@@ -678,41 +678,52 @@ class StoreLogic
 
     public static function format_export_stores($stores)
     {
+        $exportService = new \App\Services\MultilingualExportService();
         $storage = [];
+        
         foreach($stores as $item)
         {
             if($item->stores->count()<1)
             {
                 break;
             }
-            $storage[] = [
-                'Id'=>$item->stores[0]->id,
-                'OwnerId'=>$item->id,
-                'OwnerFirstName'=>$item->f_name,
-                'OwnerLastName'=>$item->l_name,
-                'ProviderName'=>$item->stores[0]->name,
-                'Phone'=>$item->phone,
-                'Email'=>$item->email,
-                'Logo'=>$item->stores[0]->logo,
-                'CoverPhoto'=>$item->stores[0]->cover_photo,
-                'Latitude'=>$item->stores[0]->latitude,
-                'Longitude'=>$item->stores[0]->longitude,
-                'Address'=>$item->stores[0]->address ?? null,
-                'ZoneId'=>$item->stores[0]->zone_id,
-                'ModuleId'=>$item->stores[0]->module_id,
-                'Comission'=>$item->stores[0]->comission ?? 0,
-                'Tax'=>$item->stores[0]->tax ?? 0,
-                'PickupTime'=>$item->stores[0]->delivery_time ?? '20-30 min',
-                'ScheduleTrip'=> $item->stores[0]->schedule_order == 1 ? 'yes' : 'no',
-                'Status'=> $item->stores[0]->status == 1 ? 'active' : 'inactive',
-                'ReviewsSection'=> $item->stores[0]->reviews_section == 1 ? 'active' : 'inactive',
-                'storeOpen'=> $item->stores[0]->active == 1 ? 'yes' : 'no',
-                // FIXED: Add missing columns requested by client (Issue #1)
-                'HalalTagStatus'=>$item->stores[0]->halal_tag_status ?? 1,
-                'Cutlery'=>$item->stores[0]->cutlery ?? 1,
-                'DailyTime'=>'09:00-22:00', // Daily time schedule
-                'ManageItemSetup'=> $item->stores[0]->schedule_order == 1 ? 'Enable' : 'Manual', // Issue #6
+            
+            $store = $item->stores[0];
+            $translations = $store->translations ?? collect();
+            
+            // Extract multilingual data
+            $multilingualData = $exportService->extractMultilingualData($store, 'Store');
+            
+            // Base store data with corrected field names to match import template
+            $baseData = [
+                'Id' => $store->id,
+                'Name' => $store->name,  // Changed from 'ProviderName' to 'Name'
+                'Address' => $store->address ?? null,  // Moved up for better organization
+                'Phone' => $item->phone,
+                'Email' => $item->email,
+                'Logo' => $store->logo,
+                'CoverPhoto' => $store->cover_photo,
+                'Latitude' => $store->latitude,
+                'Longitude' => $store->longitude,
+                'ZoneId' => $store->zone_id,
+                'ModuleId' => $store->module_id,
+                'Comission' => $store->comission ?? 0,
+                'Tax' => $store->tax ?? 0,
+                'PickupTime' => $store->delivery_time ?? '20-30 min',
+                'ScheduleTrip' => $store->schedule_order == 1 ? 'yes' : 'no',
+                'Status' => $store->status == 1 ? 'active' : 'inactive',
+                'ReviewsSection' => $store->reviews_section == 1 ? 'active' : 'inactive',
+                'storeOpen' => $store->active == 1 ? 'yes' : 'no',
+                'HalalTagStatus' => $store->halal_tag_status ?? 1,
+                'Cutlery' => $store->cutlery ?? 1,
+                'DailyTime' => '09:00-22:00',
+                'ManageItemSetup' => $store->schedule_order == 1 ? 'Enable' : 'Manual',
             ];
+            
+            // Merge base data with multilingual data
+            $exportRow = array_merge($baseData, $multilingualData);
+            
+            $storage[] = $exportRow;
         }
 
         return $storage;

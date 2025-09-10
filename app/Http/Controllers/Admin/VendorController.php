@@ -2249,7 +2249,7 @@ class VendorController extends Controller
             'from_date'=>'required_if:type,date_wise',
             'to_date'=>'required_if:type,date_wise'
         ]);
-        $vendors = Vendor::with('stores')
+        $vendors = Vendor::with(['stores.translations'])
         ->when($request['type']=='date_wise', function($query)use($request){
             $query->whereBetween('created_at', [$request['from_date'].' 00:00:00', $request['to_date'].' 23:59:59']);
         })
