@@ -143,6 +143,45 @@ class VendorController extends Controller
         $store->module_id = Config::get('module.current_module_id');
         try {
             $store->save();
+            
+            // Save storage metadata for new store
+            if ($store->logo && $store->logo !== 'def.png') {
+                $store->storage()->updateOrCreate(
+                    ['key' => 'logo'],
+                    ['value' => \App\CentralLogics\Helpers::getDisk()]
+                );
+            }
+            
+            if ($store->cover_photo && $store->cover_photo !== 'def.png') {
+                $store->storage()->updateOrCreate(
+                    ['key' => 'cover_photo'],
+                    ['value' => \App\CentralLogics\Helpers::getDisk()]
+                );
+            }
+        
+        // Save storage metadata for uploaded files
+        if ($request->hasFile('logo') && $store->logo && $store->logo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'logo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        if ($request->hasFile('cover_photo') && $store->cover_photo && $store->cover_photo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'cover_photo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        // Log upload results
+        \Log::info("Store update completed", [
+            "store_id" => $store->id,
+            "logo_result" => $store->logo,
+            "cover_result" => $store->cover_photo,
+            "had_logo_upload" => $request->hasFile('logo'),
+            "had_cover_upload" => $request->hasFile('cover_photo')
+        ]);
             // $store->module->increment('stores_count');
             if(config('module.'.$store->module->module_type)['always_open'])
             {
@@ -285,7 +324,29 @@ class VendorController extends Controller
         $store->slug = $store->slug? $store->slug :"{$slug}{$store->id}";
         $store->email = $request->email;
         $store->phone = $request->phone;
+        // Log logo upload attempt
+        if ($request->hasFile('logo')) {
+            \Log::info("Store logo upload attempt", [
+                "store_id" => $store->id,
+                "original_name" => $request->file('logo')->getClientOriginalName(),
+                "size" => $request->file('logo')->getSize(),
+                "mime" => $request->file('logo')->getMimeType(),
+                "current_logo" => $store->logo
+            ]);
+        }
+        
         $store->logo = $request->has('logo') ? Helpers::update('store/', $store->logo, 'png', $request->file('logo')) : $store->logo;
+        // Log cover photo upload attempt
+        if ($request->hasFile('cover_photo')) {
+            \Log::info("Store cover photo upload attempt", [
+                "store_id" => $store->id,
+                "original_name" => $request->file('cover_photo')->getClientOriginalName(),
+                "size" => $request->file('cover_photo')->getSize(),
+                "mime" => $request->file('cover_photo')->getMimeType(),
+                "current_cover" => $store->cover_photo
+            ]);
+        }
+        
         $store->cover_photo = $request->has('cover_photo') ? Helpers::update('store/cover/', $store->cover_photo, 'png', $request->file('cover_photo')) : $store->cover_photo;
         $store->name = $request->name[array_search('default', $request->lang)];
         $store->address = $request->address[array_search('default', $request->lang)];
@@ -295,6 +356,30 @@ class VendorController extends Controller
         $store->tax = $request->tax;
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->save();
+        
+        // Save storage metadata for uploaded files
+        if ($request->hasFile('logo') && $store->logo && $store->logo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'logo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        if ($request->hasFile('cover_photo') && $store->cover_photo && $store->cover_photo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'cover_photo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        // Log upload results
+        \Log::info("Store update completed", [
+            "store_id" => $store->id,
+            "logo_result" => $store->logo,
+            "cover_result" => $store->cover_photo,
+            "had_logo_upload" => $request->hasFile('logo'),
+            "had_cover_upload" => $request->hasFile('cover_photo')
+        ]);
         $default_lang = str_replace('_', '-', app()->getLocale());
         foreach($request->lang as $index=>$key)
         {
@@ -899,6 +984,30 @@ class VendorController extends Controller
     {
         $store->status = $request->status;
         $store->save();
+        
+        // Save storage metadata for uploaded files
+        if ($request->hasFile('logo') && $store->logo && $store->logo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'logo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        if ($request->hasFile('cover_photo') && $store->cover_photo && $store->cover_photo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'cover_photo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        // Log upload results
+        \Log::info("Store update completed", [
+            "store_id" => $store->id,
+            "logo_result" => $store->logo,
+            "cover_result" => $store->cover_photo,
+            "had_logo_upload" => $request->hasFile('logo'),
+            "had_cover_upload" => $request->hasFile('cover_photo')
+        ]);
         $vendor = $store->vendor;
 
         try
@@ -995,6 +1104,30 @@ class VendorController extends Controller
 
         $store[$request->menu] = $request->status;
         $store->save();
+        
+        // Save storage metadata for uploaded files
+        if ($request->hasFile('logo') && $store->logo && $store->logo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'logo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        if ($request->hasFile('cover_photo') && $store->cover_photo && $store->cover_photo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'cover_photo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        // Log upload results
+        \Log::info("Store update completed", [
+            "store_id" => $store->id,
+            "logo_result" => $store->logo,
+            "cover_result" => $store->cover_photo,
+            "had_logo_upload" => $request->hasFile('logo'),
+            "had_cover_upload" => $request->hasFile('cover_photo')
+        ]);
         Toastr::success(translate('messages.vendor_settings_updated'));
         return back();
     }
@@ -1025,6 +1158,30 @@ class VendorController extends Controller
         if($request?->tab == 'business_plan'){
             $store->comission = $request->comission_status ?  $request->comission : null;
             $store->save();
+        
+        // Save storage metadata for uploaded files
+        if ($request->hasFile('logo') && $store->logo && $store->logo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'logo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        if ($request->hasFile('cover_photo') && $store->cover_photo && $store->cover_photo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'cover_photo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        // Log upload results
+        \Log::info("Store update completed", [
+            "store_id" => $store->id,
+            "logo_result" => $store->logo,
+            "cover_result" => $store->cover_photo,
+            "had_logo_upload" => $request->hasFile('logo'),
+            "had_cover_upload" => $request->hasFile('cover_photo')
+        ]);
             Toastr::success(translate('messages.Commission_updated'));
             return back();
         }
@@ -1045,6 +1202,30 @@ class VendorController extends Controller
         $store->non_veg = (bool)($request->veg_non_veg == 'non_veg' || $request->veg_non_veg == 'both');
 
         $store->save();
+        
+        // Save storage metadata for uploaded files
+        if ($request->hasFile('logo') && $store->logo && $store->logo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'logo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        if ($request->hasFile('cover_photo') && $store->cover_photo && $store->cover_photo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'cover_photo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        // Log upload results
+        \Log::info("Store update completed", [
+            "store_id" => $store->id,
+            "logo_result" => $store->logo,
+            "cover_result" => $store->cover_photo,
+            "had_logo_upload" => $request->hasFile('logo'),
+            "had_cover_upload" => $request->hasFile('cover_photo')
+        ]);
         Toastr::success(translate('messages.store_settings_updated'));
         return back();
     }
@@ -1065,6 +1246,30 @@ class VendorController extends Controller
         $store->meta_description = $request->meta_description[array_search('default', $request->lang)];
 
         $store->save();
+        
+        // Save storage metadata for uploaded files
+        if ($request->hasFile('logo') && $store->logo && $store->logo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'logo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        if ($request->hasFile('cover_photo') && $store->cover_photo && $store->cover_photo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'cover_photo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        // Log upload results
+        \Log::info("Store update completed", [
+            "store_id" => $store->id,
+            "logo_result" => $store->logo,
+            "cover_result" => $store->cover_photo,
+            "had_logo_upload" => $request->hasFile('logo'),
+            "had_cover_upload" => $request->hasFile('cover_photo')
+        ]);
         $default_lang = str_replace('_', '-', app()->getLocale());
         foreach($request->lang as $index=>$key)
         {
@@ -1142,6 +1347,30 @@ class VendorController extends Controller
             $store->store_business_model= 'subscription';
         }
         $store->save();
+        
+        // Save storage metadata for uploaded files
+        if ($request->hasFile('logo') && $store->logo && $store->logo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'logo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        if ($request->hasFile('cover_photo') && $store->cover_photo && $store->cover_photo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'cover_photo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        // Log upload results
+        \Log::info("Store update completed", [
+            "store_id" => $store->id,
+            "logo_result" => $store->logo,
+            "cover_result" => $store->cover_photo,
+            "had_logo_upload" => $request->hasFile('logo'),
+            "had_cover_upload" => $request->hasFile('cover_photo')
+        ]);
         try{
             if($request->status==1){
                 if ( config('mail.status') && Helpers::get_mail_status('approve_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_registration_approval','mail_status')) {
@@ -2320,6 +2549,30 @@ class VendorController extends Controller
         $store = Store::findOrFail($request->store);
         $store->featured = $request->status;
         $store->save();
+        
+        // Save storage metadata for uploaded files
+        if ($request->hasFile('logo') && $store->logo && $store->logo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'logo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        if ($request->hasFile('cover_photo') && $store->cover_photo && $store->cover_photo !== 'def.png') {
+            $store->storage()->updateOrCreate(
+                ['key' => 'cover_photo'],
+                ['value' => \App\CentralLogics\Helpers::getDisk()]
+            );
+        }
+        
+        // Log upload results
+        \Log::info("Store update completed", [
+            "store_id" => $store->id,
+            "logo_result" => $store->logo,
+            "cover_result" => $store->cover_photo,
+            "had_logo_upload" => $request->hasFile('logo'),
+            "had_cover_upload" => $request->hasFile('cover_photo')
+        ]);
         Toastr::success(translate('messages.store_featured_status_updated'));
         return back();
     }

@@ -1984,6 +1984,12 @@ class Helpers
 
     public static function upload(string $dir, string $format, $image = null)
     {
+        \Log::info("Upload attempt", [
+            "dir" => $dir,
+            "format" => $format,
+            "has_image" => $image !== null,
+            "disk" => self::getDisk()
+        ]);
         try {
             if ($image != null) {
                 $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
@@ -1991,10 +1997,23 @@ class Helpers
                     Storage::disk(self::getDisk())->makeDirectory($dir);
                 }
                 Storage::disk(self::getDisk())->putFileAs($dir, $image, $imageName);
+                \Log::info("Upload successful", [
+                    "dir" => $dir,
+                    "filename" => $imageName,
+                    "disk" => self::getDisk(),
+                    "file_size" => $image->getSize(),
+                    "original_name" => $image->getClientOriginalName()
+                ]);
             } else {
                 $imageName = 'def.png';
             }
         } catch (\Exception $e) {
+            \Log::error("Upload failed", [
+                "error" => $e->getMessage(),
+                "file" => $e->getFile(),
+                "line" => $e->getLine(),
+                "method" => __METHOD__
+            ]);
         }
         return $imageName;
     }
@@ -2009,6 +2028,12 @@ class Helpers
                 Storage::disk(self::getDisk())->delete($dir . $old_image);
             }
         } catch (\Exception $e) {
+            \Log::error("Upload failed", [
+                "error" => $e->getMessage(),
+                "file" => $e->getFile(),
+                "line" => $e->getLine(),
+                "method" => __METHOD__
+            ]);
         }
         $imageName = Helpers::upload($dir, $format, $image);
         return $imageName;
@@ -2025,6 +2050,12 @@ class Helpers
                 Storage::disk('s3')->delete($dir . $old_image);
             }
         } catch (\Exception $e) {
+            \Log::error("Upload failed", [
+                "error" => $e->getMessage(),
+                "file" => $e->getFile(),
+                "line" => $e->getLine(),
+                "method" => __METHOD__
+            ]);
         }
 
         return true;
