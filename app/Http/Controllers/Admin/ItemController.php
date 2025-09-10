@@ -374,20 +374,19 @@ class ItemController extends Controller
     {
         $temp_product= false;
         if($request->temp_product){
-            $product = TempProduct::withoutGlobalScope(StoreScope::class)->withoutGlobalScope('translate')->with('store', 'category', 'module', 'translations')->findOrFail($id);
+            $product = TempProduct::withoutGlobalScopes()->with('store', 'category', 'module')->findOrFail($id);
             $temp_product= true;
+            $modelClass = 'App\\Models\\TempProduct';
         }else{
-            $product = Item::withoutGlobalScope(StoreScope::class)->withoutGlobalScope('translate')->with('store', 'category', 'module', 'translations')->findOrFail($id);
+            $product = Item::withoutGlobalScopes()->with('store', 'category', 'module')->findOrFail($id);
+            $modelClass = 'App\\Models\\Item';
         }
         
-        // 🛡️ BULLETPROOF FIX: Manually load translations if eager loading fails
-        if($product->translations->isEmpty()) {
-            $modelClass = $temp_product ? 'App\\Models\\TempProduct' : 'App\\Models\\Item';
-            $translations = \App\Models\Translation::where('translationable_type', $modelClass)
-                ->where('translationable_id', $id)
-                ->get();
-            $product->setRelation('translations', $translations);
-        }
+        // Load ALL translations directly to bypass any filtering
+        $translations = \App\Models\Translation::where('translationable_type', $modelClass)
+            ->where('translationable_id', $id)
+            ->get();
+        $product->setRelation('translations', $translations);
         if (!$product) {
             Toastr::error(translate('messages.item_not_found'));
             return back();

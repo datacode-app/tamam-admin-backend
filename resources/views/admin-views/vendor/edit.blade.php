@@ -97,21 +97,6 @@
                                 </div>
                             </div>
                                 @foreach (json_decode($language) as $lang)
-                                <?php
-                                    if(count($store['translations'])){
-            // TRANSLATION FIX: Removed $translate = []; from inside foreach loop
-            // This was causing Kurdish/Arabic translations to be lost on each iteration
-                                        foreach($store['translations'] as $t)
-                                        {
-                                            if($t->locale == $lang && $t->key=="name"){
-                                                $translate[$lang]['name'] = $t->value;
-                                            }
-                                            if($t->locale == $lang && $t->key=="address"){
-                                                $translate[$lang]['address'] = $t->value;
-                                            }
-                                        }
-                                    }
-                                ?>
                                     <div class="d-none lang_form"
                                         id="{{ $lang }}-form">
                                         <div class="form-group">

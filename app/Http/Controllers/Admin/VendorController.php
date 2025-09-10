@@ -211,15 +211,13 @@ class VendorController extends Controller
             Toastr::warning(translate('messages.you_can_not_edit_this_store_please_add_a_new_store_to_edit'));
             return back();
         }
-        $store = Store::withoutGlobalScope('translate')->with('translations')->findOrFail($id);
+        $store = Store::withoutGlobalScopes()->findOrFail($id);
         
-        // Fix: Manually load translations if eager loading fails
-        if($store->translations->isEmpty()) {
-            $translations = Translation::where('translationable_type', 'App\Models\Store')
-                ->where('translationable_id', $id)
-                ->get();
-            $store->setRelation('translations', $translations);
-        }
+        // Load ALL translations directly to bypass any filtering
+        $translations = Translation::where('translationable_type', 'App\Models\Store')
+            ->where('translationable_id', $id)
+            ->get();
+        $store->setRelation('translations', $translations);
         
         $language = \App\Models\BusinessSetting::where('key', 'language')->first();
         return view('admin-views.vendor.edit', compact('store', 'language'));
