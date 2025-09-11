@@ -1,6 +1,11 @@
 <?php
 ini_set('memory_limit',-1);
 
+// Set execution time limit for local development
+if (env('APP_ENV') === 'local') {
+    ini_set('max_execution_time', env('PHP_MAX_EXECUTION_TIME', 300));
+}
+
 // Suppress PHP deprecation warnings while keeping other error reporting
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 /*

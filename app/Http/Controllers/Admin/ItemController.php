@@ -1949,6 +1949,91 @@ class ItemController extends Controller
 
     }
 
+    /**
+     * Export items with multilingual support (Arabic, Kurdish, English)
+     * 
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function multilingual_export(Request $request)
+    {
+        $store_id = $request->query('store_id', 'all');
+        $category_id = $request->query('category_id', 'all');
+        $sub_category_id = $request->query('sub_category_id', 'all');
+        $zone_id = $request->query('zone_id', 'all');
+
+        $model = app("\\App\\Models\\Item");
+        if($request?->table && $request?->table == 'TempProduct'){
+            $model = app("\\App\\Models\\TempProduct");
+        }
+
+        $type = $request->query('type', 'all');
+        $key = explode(' ', $request['search'] ?? '');
+        
+        // Build query with same filtering logic as regular export
+        $item = $model->withoutGlobalScope(StoreScope::class)
+            ->when($request->query('module_id', null), function ($query) use ($request) {
+                return $query->module($request->query('module_id'));
+            })
+            ->when(is_numeric($store_id), function ($query) use ($store_id) {
+                return $query->where('store_id', $store_id);
+            })
+            ->when(is_numeric($sub_category_id), function ($query) use ($sub_category_id) {
+                return $query->where('category_id', $sub_category_id);
+            })
+            ->when(is_numeric($category_id), function ($query) use ($category_id) {
+                return $query->whereHas('category', function ($q) use ($category_id) {
+                    return $q->whereId($category_id)->orWhere('parent_id', $category_id);
+                });
+            })
+            ->when(is_numeric($zone_id), function ($query) use ($zone_id) {
+                return $query->whereHas('store', function ($q) use ($zone_id) {
+                    return $q->where('zone_id', $zone_id);
+                });
+            })
+            ->when($request['search'], function ($query) use ($key) {
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->where('name', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->approved()
+            ->module(Config::get('module.current_module_id'))
+            ->type($type)
+            ->with([
+                'category', 
+                'store', 
+                'translations' => function($query) {
+                    // Load all translations for multilingual export
+                    $query->whereIn('locale', ['en', 'ar', 'ckb'])
+                          ->whereIn('key', ['name', 'description']);
+                }
+            ])
+            ->latest()
+            ->get();
+
+        $format_type = 'Item';
+        if (Config::get('module.current_module_type') == 'food') {
+            $format_type = 'Food';
+        }
+
+        $data = [
+            'table' => $request?->table,
+            'data' => $item,
+            'search' => $request['search'] ?? null,
+            'store' => $store_id != 'all' ? Store::findOrFail($store_id)?->name : null,
+            'category' => $category_id != 'all' ? Category::findOrFail($category_id)?->name : null,
+            'module_name' => Helpers::get_module_name(Config::get('module.current_module_id')),
+        ];
+
+        $filename = $format_type . 'ListMultilingual';
+        if ($request->type == 'csv') {
+            return Excel::download(new \App\Exports\ItemListMultilingualExport($data), $filename . '.csv');
+        }
+        return Excel::download(new \App\Exports\ItemListMultilingualExport($data), $filename . '.xlsx');
+    }
+
     public function search_store(Request $request, $store_id)
     {
         $key = explode(' ', $request['search']);

@@ -46,6 +46,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
     Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::get('store/get-store-ratings', [VendorController::class,'get_store_ratings'])->name('store.get-store-ratings');
+        Route::get('store/multilingual-export', [VendorController::class, 'multilingual_export'])->name('store.multilingual-export');
         Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
             Route::get(Category::NAME_LIST[URI], [CategoryController::class, 'getNameList'])->name('get-all');
             Route::group(['middleware' => ['module:category']], function () {
@@ -58,6 +59,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get(Category::FEATURED[URI].'/{id}/{featured}', [CategoryController::class, 'updateFeatured'])->name('featured');
                 Route::delete(Category::DELETE[URI].'/{id}', [CategoryController::class, 'delete'])->name('delete');
                 Route::get(Category::EXPORT[URI], [CategoryController::class, 'exportList'])->name('export-categories');
+                Route::get('category/multilingual-export', [CategoryController::class, 'multilingual_export'])->name('category.multilingual-export');
 
                 //Import and export
                 Route::get(Category::BULK_IMPORT[URI], [CategoryController::class, 'getBulkImportView'])->name('bulk-import');
@@ -94,6 +96,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post(Addon::UPDATE[URI].'/{id}', [AddonController::class, 'update'])->name('update');
             Route::delete(Addon::DELETE[URI].'/{id}', [AddonController::class, 'delete'])->name('delete');
             Route::get(Addon::EXPORT[URI], [AddonController::class, 'exportList'])->name('export');
+            Route::get('addon/multilingual-export', [AddonController::class, 'multilingual_export'])->name('addon.multilingual-export');
             Route::get(Addon::UPDATE_STATUS[URI].'/{id}/{status}', [AddonController::class, 'updateStatus'])->name('status');
 
             //Import and export

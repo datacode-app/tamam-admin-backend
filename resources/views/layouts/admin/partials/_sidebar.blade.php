@@ -662,6 +662,12 @@
                                     <span class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
                                 </a>
                             </li>
+                            <li class="nav-item {{ Request::is('admin/store/bulk-import-multilang') ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ route('admin.store.bulk-import-multilang') }}" title="{{ translate('messages.multilingual_stores_bulk_import') }}">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate text-capitalize">{{ translate('messages.multilingual_bulk_import') }}</span>
+                                </a>
+                            </li>
                             <li class="nav-item {{ Request::is('admin/store/bulk-export') ? 'active' : '' }}">
                                 <a class="nav-link " href="{{ route('admin.store.bulk-export-index') }}" title="{{ translate('messages.bulk_export') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>

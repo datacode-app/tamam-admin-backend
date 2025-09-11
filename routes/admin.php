@@ -83,6 +83,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
 
             Route::get('export', 'ItemController@export')->name('export');
+            Route::get('multilingual-export', 'ItemController@multilingual_export')->name('multilingual-export');
 
             //Mainul
             Route::get('get-variations', 'ItemController@get_variations')->name('get-variations');
@@ -211,6 +212,11 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('bulk-import', 'VendorController@bulletproof_store_import');  // BULLETPROOF METHOD
                 Route::post('bulk-import-legacy', 'VendorController@bulk_import_data')->name('legacy-import'); // Legacy fallback
                 Route::get('bulletproof-import-status', 'VendorController@getBulletproofImportStatus')->name('bulletproof-import-status');
+                
+                // Multilingual Import Routes
+                Route::get('bulk-import-multilang', 'VendorController@bulk_import_multilang_index')->name('bulk-import-multilang');
+                Route::post('bulk-import-multilang', 'VendorController@bulk_import_multilang_data');
+                
                 Route::get('bulk-export', 'VendorController@bulk_export_index')->name('bulk-export-index');
                 Route::post('bulk-export', 'VendorController@bulk_export_data')->name('bulk-export');
                 //Store shcedule

@@ -8,7 +8,9 @@ use App\Contracts\Repositories\TranslationRepositoryInterface;
 use App\Enums\ExportFileNames\Admin\Addon;
 use App\Enums\ViewPaths\Admin\Addon as AddonViewPath;
 use App\Exports\AddonExport;
+use App\Exports\AddonListMultilingualExport;
 use App\Http\Controllers\BaseController;
+use App\Models\AddOn as AddonModel;
 use App\Http\Requests\Admin\AddonAddRequest;
 use App\Http\Requests\Admin\AddonBulkExportRequest;
 use App\Http\Requests\Admin\AddonBulkImportRequest;
@@ -211,5 +213,49 @@ class AddonController extends BaseController
     {
         $categories = $this->addonRepo->getBulkExportList(request: $request);
         return (new FastExcel($this->addonService->getBulkExportData(collection: $this->exportGenerator(data: $categories))))->download(Addon::EXPORT_XLSX);
+    }
+
+    /**
+     * Export addons with multilingual support
+     */
+    public function multilingual_export(Request $request): BinaryFileResponse
+    {
+        $request->validate([
+            'type' => 'required|in:all,id_wise',
+            'start_id' => 'required_if:type,id_wise',
+            'end_id' => 'required_if:type,id_wise',
+        ]);
+
+        // Query building with filters
+        $query = AddonModel::query();
+        
+        // Apply filters based on request
+        if ($request->type == 'id_wise') {
+            $query->whereBetween('id', [$request->start_id, $request->end_id]);
+        }
+
+        // Apply search filters if provided
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Get data with translations
+        $addons = $query->with(['translations' => function($query) {
+            $query->whereIn('locale', ['en', 'ar', 'ckb'])
+                  ->whereIn('key', ['name']);
+        }])->get();
+
+        $data = [
+            'data' => $addons,
+            'search' => $request->search,
+            'from' => $request->from,
+            'to' => $request->to,
+            'module_name' => Config::get('module.current_module_data')['module_name'] ?? 'N/A',
+        ];
+
+        return Excel::download(
+            new AddonListMultilingualExport($data), 
+            'addons-multilingual-' . now()->format('Y-m-d-H-i-s') . '.xlsx'
+        );
     }
 }
