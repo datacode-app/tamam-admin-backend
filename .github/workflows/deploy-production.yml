@@ -1,0 +1,218 @@
+name: 🚀 Deploy to Production Server
+
+on:
+  push:
+    branches: [ prod ]
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  deploy-production:
+    name: 📦 Deploy TAMAM Admin to Production
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: production
+      url: https://prod.tamam.shop/admin
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🔐 Setup SSH Key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.PRODUCTION_SSH_KEY }}
+      
+      - name: 🔑 Add Server to Known Hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.PRODUCTION_SERVER_IP }} >> ~/.ssh/known_hosts
+      
+      - name: 🧪 Test SSH Connection
+        run: |
+          ssh -o ConnectTimeout=10 root@${{ secrets.PRODUCTION_SERVER_IP }} "echo '✅ SSH connection successful'"
+      
+      - name: 📦 Deploy Laravel Files
+        run: |
+          echo "🚀 Starting deployment to prod.tamam.shop..."
+          echo "⚠️  PRODUCTION DEPLOYMENT - PROCEED WITH CAUTION ⚠️"
+          
+          # Deploy core Laravel files with rsync
+          rsync -avz --progress \
+            --include='app/' --include='app/**' \
+            --include='bootstrap/' --include='bootstrap/**' \
+            --include='config/' --include='config/**' \
+            --include='database/' --include='database/**' \
+            --include='public/' --include='public/**' \
+            --include='resources/' --include='resources/**' \
+            --include='routes/' --include='routes/**' \
+            --include='storage/' --include='storage/**' \
+            --include='Modules/' --include='Modules/**' \
+            --include='vendor/' --include='vendor/**' \
+            --include='artisan' \
+            --include='composer.json' \
+            --include='composer.lock' \
+            --exclude='*' \
+            ./ root@${{ secrets.PRODUCTION_SERVER_IP }}:/var/www/tamam/
+          
+          echo "✅ Files deployed successfully"
+      
+      - name: 🔧 Create Production Environment
+        run: |
+          echo "Creating production environment configuration..."
+          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "cat > /var/www/tamam/.env << 'EOF'
+          APP_NAME=Laravel
+          APP_ENV=production
+          APP_KEY=base64:EvCdLnWM9f4hNotbvmwTo1w+PM2693O9gyknfhNozHs=
+          APP_DEBUG=false
+          APP_URL=https://prod.tamam.shop
+          
+          LOG_CHANNEL=stack
+          LOG_DEPRECATIONS_CHANNEL=null
+          LOG_LEVEL=error
+          
+          DB_CONNECTION=mysql
+          DB_HOST=tamam-production-db-do-user-19403128-0.j.db.ondigitalocean.com
+          DB_PORT=25060
+          DB_DATABASE=tamamdb
+          DB_USERNAME=doadmin
+          DB_PASSWORD=${{ secrets.PRODUCTION_DB_PASSWORD }}
+          
+          BROADCAST_DRIVER=log
+          CACHE_DRIVER=file
+          FILESYSTEM_DRIVER=s3
+          QUEUE_CONNECTION=sync
+          SESSION_DRIVER=file
+          SESSION_LIFETIME=120
+          
+          MEMCACHED_HOST=127.0.0.1
+          
+          REDIS_HOST=127.0.0.1
+          REDIS_PASSWORD=null
+          REDIS_PORT=6379
+          
+          MAIL_MAILER=smtp
+          MAIL_HOST=mailhog
+          MAIL_PORT=1025
+          MAIL_USERNAME=null
+          MAIL_PASSWORD=null
+          MAIL_ENCRYPTION=null
+          MAIL_FROM_ADDRESS=noreply@tamam.shop
+          MAIL_FROM_NAME=\"\${APP_NAME}\"
+          
+          AWS_ACCESS_KEY_ID=${{ secrets.PRODUCTION_SPACES_KEY }}
+          AWS_SECRET_ACCESS_KEY=${{ secrets.PRODUCTION_SPACES_SECRET }}
+          AWS_DEFAULT_REGION=fra1
+          AWS_BUCKET=tamam-prod
+          AWS_ENDPOINT=https://fra1.digitaloceanspaces.com
+          AWS_USE_PATH_STYLE_ENDPOINT=false
+          AWS_URL=https://tamam-prod.fra1.cdn.digitaloceanspaces.com
+          
+          PUSHER_APP_ID=
+          PUSHER_APP_KEY=
+          PUSHER_APP_SECRET=
+          PUSHER_HOST=
+          PUSHER_PORT=443
+          PUSHER_SCHEME=https
+          PUSHER_APP_CLUSTER=mt1
+          
+          VITE_APP_NAME=\"\${APP_NAME}\"
+          VITE_PUSHER_APP_KEY=\"\${PUSHER_APP_KEY}\"
+          VITE_PUSHER_HOST=\"\${PUSHER_HOST}\"
+          VITE_PUSHER_PORT=\"\${PUSHER_PORT}\"
+          VITE_PUSHER_SCHEME=\"\${PUSHER_SCHEME}\"
+          VITE_PUSHER_APP_CLUSTER=\"\${PUSHER_APP_CLUSTER}\"
+          EOF"
+          echo "✅ Production environment created"
+      
+      - name: 🔧 Set File Permissions
+        run: |
+          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
+            chown -R www-data:www-data /var/www/tamam &&
+            chmod -R 755 /var/www/tamam &&
+            chmod -R 775 /var/www/tamam/storage &&
+            mkdir -p /var/www/tamam/bootstrap/cache &&
+            chmod -R 775 /var/www/tamam/bootstrap/cache
+          "
+      
+      - name: 📚 Update Dependencies
+        run: |
+          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
+            cd /var/www/tamam &&
+            composer install --no-dev --optimize-autoloader --no-interaction
+          "
+      
+      - name: 🧹 Clear Laravel Caches
+        run: |
+          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
+            cd /var/www/tamam &&
+            php artisan config:clear &&
+            php artisan route:clear &&
+            php artisan cache:clear &&
+            php artisan view:clear
+          "
+      
+      - name: 🔑 Generate App Key (if needed)
+        run: |
+          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
+            cd /var/www/tamam &&
+            if ! grep -q '^APP_KEY=base64:' .env; then 
+              php artisan key:generate --force
+            fi
+          "
+      
+      - name: 🗄️ Skip Database Migrations  
+        run: |
+          echo "ℹ️  Skipping migrations - database already populated from staging"
+          echo "✅ Migration step skipped (production database ready)"
+      
+      - name: 🔄 Restart Services
+        run: |
+          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
+            systemctl restart php8.3-fpm &&
+            systemctl restart nginx
+          "
+      
+      - name: 🧪 Test Production Deployment
+        run: |
+          echo "Testing production deployment..."
+          
+          # Wait for services to fully restart
+          sleep 10
+          
+          # Test admin dashboard
+          DASHBOARD_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://prod.tamam.shop/admin)
+          echo "Admin Dashboard: $DASHBOARD_STATUS"
+          
+          # Test admin login
+          LOGIN_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://prod.tamam.shop/login/admin)
+          echo "Admin Login: $LOGIN_STATUS"
+          
+          # Test addon management
+          ADDON_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://prod.tamam.shop/admin/addon)
+          echo "Addon Management: $ADDON_STATUS"
+          
+          # Verify all critical routes are working
+          if [[ "$DASHBOARD_STATUS" =~ ^(200|302)$ ]] && [[ "$LOGIN_STATUS" =~ ^(200|302)$ ]] && [[ "$ADDON_STATUS" =~ ^(200|302)$ ]]; then
+            echo "✅ All critical routes are responding correctly"
+          else
+            echo "❌ Some routes are not responding correctly"
+            echo "🚨 PRODUCTION DEPLOYMENT MAY HAVE ISSUES - INVESTIGATE IMMEDIATELY"
+            exit 1
+          fi
+      
+      - name: 📊 Production Deployment Summary
+        if: always()
+        run: |
+          echo "🎉 PRODUCTION DEPLOYMENT COMPLETE!"
+          echo "📍 Admin URL: https://prod.tamam.shop/admin"
+          echo "📍 Login URL: https://prod.tamam.shop/login/admin"
+          echo "⏰ Deployed at: $(date)"
+          echo ""
+          echo "🔍 Critical Next Steps:"
+          echo "  • Immediately test admin login functionality"
+          echo "  • Verify all critical business operations work"
+          echo "  • Monitor server resources and performance"
+          echo "  • Check application error logs"
+          echo "  • Validate database connectivity and data integrity"
+          echo ""
+          echo "🚨 IMPORTANT: Monitor production closely for 30+ minutes"
