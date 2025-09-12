@@ -16,6 +16,10 @@
       "specialization": ["Terraform", "Docker", "CI/CD", "Infrastructure", "Deployment"]
     }
   },
+  "owner": {
+    "name": "Hooshyar",
+    "email": "hooseyr@gmail.com"
+  },
   "project_paths": {
     "frontend": [
       "*/package.json",
