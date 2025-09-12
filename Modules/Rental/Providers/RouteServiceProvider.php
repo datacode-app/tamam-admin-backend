@@ -47,8 +47,13 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        $adminRouteFile = base_path('Modules/Rental/Routes/web/admin/admin.php');
-        $vendorRouteFile = base_path('Modules/Rental/Routes/web/vendor/routes.php');
+        $adminWeb1 = base_path('Modules/Rental/Routes/web/admin/admin.php');
+        $adminWeb2 = base_path('Modules/Modules/Rental/Routes/web/admin/admin.php');
+        $adminRouteFile = file_exists($adminWeb1) ? $adminWeb1 : $adminWeb2;
+
+        $vendorWeb1 = base_path('Modules/Rental/Routes/web/vendor/routes.php');
+        $vendorWeb2 = base_path('Modules/Modules/Rental/Routes/web/vendor/routes.php');
+        $vendorRouteFile = file_exists($vendorWeb1) ? $vendorWeb1 : $vendorWeb2;
 
         if ($adminRouteFile && file_exists($adminRouteFile)) {
             Route::middleware('web')
@@ -76,7 +81,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        $apiRouteFile = base_path('Modules/Rental/Routes/api/v1/provider/api.php');
+        $api1 = base_path('Modules/Rental/Routes/api/v1/provider/api.php');
+        $api2 = base_path('Modules/Modules/Rental/Routes/api/v1/provider/api.php');
+        $apiRouteFile = file_exists($api1) ? $api1 : $api2;
 
         if ($apiRouteFile && file_exists($apiRouteFile)) {
             Route::prefix('api/v1')

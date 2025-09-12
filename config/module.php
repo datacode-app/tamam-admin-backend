@@ -155,7 +155,7 @@ return [
         'basic'=>false,
         'halal'=>false,
         'brand'=>false,
-        'generic_name'=>false,
+        'generic _name'=>false,
         'description'=>'',
         'is_rental'=>true,
     ],

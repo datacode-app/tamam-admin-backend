@@ -108,7 +108,7 @@
 
                         <tbody id="table-div">
                         @foreach($modules as $key=>$module)
-                        @if(($module->module_type == 'rental' && addon_published_status('Rental')) || $module->module_type != 'rental')
+                        @if(($module->module_type == 'rental' && addon_published_status('Rental') == 1) || $module->module_type != 'rental')
                             <tr>
                                 <td class="pl-4">{{$key+$modules->firstItem()}}</td>
                                 <td>{{$module->id}}</td>
