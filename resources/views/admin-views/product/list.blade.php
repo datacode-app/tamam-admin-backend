@@ -151,6 +151,7 @@
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
 
+                            <!-- Standard Export -->
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{ route('admin.item.export', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
@@ -163,6 +164,27 @@
                                     src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
+                            </a>
+                            
+                            <!-- Multilingual Export -->
+                            <div class="dropdown-divider"></div>
+                            <span class="dropdown-header text-success">
+                                <i class="tio-globe mr-1"></i>{{ translate('Multilingual Export') }}
+                            </span>
+                            <small class="dropdown-item-text text-muted px-3 mb-1">
+                                {{ translate('Includes Arabic, Kurdish & English translations') }}
+                            </small>
+                            <a id="multilingual-export-excel" class="dropdown-item" href="{{ route('admin.item.multilingual-export', ['type' => 'excel', request()->getQueryString()]) }}">
+                                <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                    src="{{ asset('assets/admin') }}/svg/components/excel.svg"
+                                    alt="Image Description">
+                                <span class="text-success">{{ translate('messages.excel') }} ({{ translate('Multilingual') }})</span>
+                            </a>
+                            <a id="multilingual-export-csv" class="dropdown-item" href="{{ route('admin.item.multilingual-export', ['type' => 'csv', request()->getQueryString()]) }}">
+                                <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                    src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                    alt="Image Description">
+                                <span class="text-success">.{{ translate('messages.csv') }} ({{ translate('Multilingual') }})</span>
                             </a>
 
                         </div>

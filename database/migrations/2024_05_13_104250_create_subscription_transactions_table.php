@@ -32,10 +32,7 @@ return new class extends Migration
             $table->enum('plan_type',['renew','new_plan','first_purchased','free_trial'])->default('first_purchased');
             $table->timestamps();
         });
-        // Skip AUTO_INCREMENT for SQLite
-        if (DB::getDriverName() !== 'sqlite') {
-            DB::statement('ALTER TABLE subscription_transactions AUTO_INCREMENT = 1000000;');
-        }
+        DB::statement('ALTER TABLE subscription_transactions AUTO_INCREMENT = 1000000;');
     }
 
     /**

@@ -27,6 +27,7 @@ use Illuminate\Support\Carbon;
 use App\Models\BusinessSetting;
 use App\Models\WithdrawRequest;
 use App\Exports\StoreListExport;
+use App\Exports\StoreListMultilingualExport;
 use App\Models\OrderTransaction;
 use App\CentralLogics\StoreLogic;
 use App\Mail\WithdrawRequestMail;
@@ -54,6 +55,7 @@ use App\Exports\StoreWithdrawTransactionExport;
 use App\Exports\StoreWiseWithdrawTransactionExport;
 use Modules\Rental\Emails\ProviderWithdrawRequestMail;
 use App\Traits\TranslationLoadingTrait;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 
 class VendorController extends Controller
@@ -2914,5 +2916,156 @@ class VendorController extends Controller
                 'error' => $importResult['user_message'] ?? 'Unknown error'
             ]
         ]);
+    }
+
+    /**
+     * Export stores with multilingual support
+     */
+    public function multilingual_export(Request $request): BinaryFileResponse
+    {
+        $request->validate([
+            'type' => 'required|in:all,id_wise',
+            'start_id' => 'required_if:type,id_wise',
+            'end_id' => 'required_if:type,id_wise',
+        ]);
+
+        // Query building with filters
+        $query = Store::query();
+        
+        // Apply filters based on request
+        if ($request->type == 'id_wise') {
+            $query->whereBetween('id', [$request->start_id, $request->end_id]);
+        }
+
+        // Apply search filters if provided
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Apply zone filter if provided
+        if ($request->filled('zone_id') && $request->zone_id != 'all') {
+            $query->where('zone_id', $request->zone_id);
+        }
+
+        // Get data with translations
+        $stores = $query->with(['translations' => function($query) {
+            $query->whereIn('locale', ['en', 'ar', 'ckb'])
+                  ->whereIn('key', ['name', 'address']);
+        }])->get();
+
+        $data = [
+            'data' => $stores,
+            'search' => $request->search,
+            'zone' => $request->zone_name ?? 'All',
+            'from' => $request->from,
+            'to' => $request->to,
+        ];
+
+        return Excel::download(
+            new StoreListMultilingualExport($data), 
+            'stores-multilingual-' . now()->format('Y-m-d-H-i-s') . '.xlsx'
+        );
+    }
+
+    /**
+     * Display multilingual bulk import form
+     */
+    public function bulk_import_multilang_index(Request $request)
+    {
+        // Handle template download requests
+        if ($request->filled('download')) {
+            return $this->download_multilingual_template();
+        }
+        
+        return view('admin-views.vendor.bulk-import-multilang');
+    }
+
+    /**
+     * Process multilingual bulk import data
+     */
+    public function bulk_import_multilang_data(Request $request)
+    {
+        $request->validate([
+            'products_file' => 'required|mimes:csv,xlsx,xls',
+            'upload_type' => 'required|in:import,update',
+        ]);
+
+        // Use the existing bulletproof import but with multilingual support
+        $request->merge(['button' => $request->upload_type]);
+        $request->merge(['multilingual' => true]); // Flag for multilingual processing
+        
+        return $this->bulk_import_data($request);
+    }
+
+    /**
+     * Download multilingual template for store import
+     */
+    protected function download_multilingual_template()
+    {
+        $templatePath = public_path('assets/stores_multilang_template.xlsx');
+        
+        // If template doesn't exist, create it
+        if (!file_exists($templatePath)) {
+            $this->create_multilingual_template();
+        }
+        
+        return response()->download($templatePath, 'stores_multilingual_template.xlsx');
+    }
+
+    /**
+     * Create multilingual template file
+     */
+    protected function create_multilingual_template()
+    {
+        // Sample data for the template
+        $sampleData = [
+            [
+                'storeName' => 'Sample Restaurant',
+                'email' => 'restaurant@example.com', 
+                'phone' => '+9647501234567',
+                'password' => '12345678',
+                'storeName_ar' => 'مطعم نموذجي',
+                'storeName_ckb' => 'چێشتخانەی نموونە',
+                'address' => '123 Main Street, Kurdistan',
+                'address_ar' => '123 شارع الرئيسي، كردستان',
+                'address_ckb' => '123 شەقامی سەرەکی، کوردستان',
+                'latitude' => '36.1918',
+                'longitude' => '44.0084',
+                'zone_id' => '1',
+                'module_id' => '1',
+                'minimum_order' => '10',
+                'minimum_shipping_charge' => '5',
+                'per_km_shipping_charge' => '2',
+                'maximum_shipping_charge' => '20',
+                'delivery_time' => '30-45',
+                'veg' => '0',
+                'non_veg' => '1'
+            ]
+        ];
+
+        // Create Excel file
+        $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $excel->getActiveSheet();
+
+        // Headers
+        $headers = [
+            'storeName', 'email', 'phone', 'password',
+            'storeName_ar', 'storeName_ckb', 
+            'address', 'address_ar', 'address_ckb',
+            'latitude', 'longitude', 'zone_id', 'module_id',
+            'minimum_order', 'minimum_shipping_charge', 
+            'per_km_shipping_charge', 'maximum_shipping_charge',
+            'delivery_time', 'veg', 'non_veg'
+        ];
+
+        // Set headers
+        $sheet->fromArray($headers, null, 'A1');
+        
+        // Add sample data
+        $sheet->fromArray($sampleData, null, 'A2');
+
+        // Save the file
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
+        $writer->save(public_path('assets/stores_multilang_template.xlsx'));
     }
 }
