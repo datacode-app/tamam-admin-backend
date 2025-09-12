@@ -254,23 +254,15 @@ if (! function_exists('wallet_success')) {
 if (!function_exists('addon_published_status')) {
     function addon_published_status($module_name)
     {
+        $is_published = 0;
         try {
-            $candidatePaths = [];
-
-            if (function_exists('base_path')) {
-                $candidatePaths[] = base_path("Modules/{$module_name}/Addon/info.php");
+            $infoPath = base_path("Modules/{$module_name}/Addon/info.php");
+            if (file_exists($infoPath)) {
+                $full_data = include($infoPath);
+                $is_published = ($full_data['is_published'] ?? 0) == 1 ? 1 : 0;
             }
-            $candidatePaths[] = __DIR__ . "/../Modules/{$module_name}/Addon/info.php";
-            $candidatePaths[] = dirname(__DIR__, 1) . "/Modules/{$module_name}/Addon/info.php";
-
-            foreach ($candidatePaths as $path) {
-                if (is_string($path) && file_exists($path)) {
-                    $full_data = include($path);
-                    return ((int)($full_data['is_published'] ?? 0)) === 1 ? 1 : 0;
-                }
-            }
-            return 0;
-        } catch (\Throwable $exception) {
+            return $is_published;
+        } catch (\Exception $exception) {
             return 0;
         }
     }
