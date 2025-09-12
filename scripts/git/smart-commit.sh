@@ -69,6 +69,20 @@ load_config() {
         .users | to_entries[] | 
         "export USER_" + (.key | ascii_upcase) + "_EMAIL=\"" + .value.email + "\""
     ' "$CONFIG_FILE")"
+
+    # Owner (always include) - optional in config, fallback to current git user
+    local owner_name
+    local owner_email
+    owner_name=$(jq -r '.owner.name // empty' "$CONFIG_FILE" 2>/dev/null || echo "")
+    owner_email=$(jq -r '.owner.email // empty' "$CONFIG_FILE" 2>/dev/null || echo "")
+    if [[ -z "$owner_name" ]]; then
+        owner_name=$(git config user.name 2>/dev/null || echo "")
+    fi
+    if [[ -z "$owner_email" ]]; then
+        owner_email=$(git config user.email 2>/dev/null || echo "")
+    fi
+    export OWNER_NAME="$owner_name"
+    export OWNER_EMAIL="$owner_email"
     
     log "INFO" "Configuration loaded successfully"
 }
@@ -298,6 +312,15 @@ generate_co_authors() {
     echo "$co_authors"
 }
 
+# Generate a Co-authored-by footer for the always-include owner
+generate_owner_footer() {
+    local primary_email
+    primary_email="$(git config user.email 2>/dev/null || echo "")"
+    if [[ -n "$OWNER_NAME" && -n "$OWNER_EMAIL" && "$OWNER_EMAIL" != "$primary_email" ]]; then
+        echo "Co-authored-by: $OWNER_NAME <$OWNER_EMAIL>"
+    fi
+}
+
 # Create and commit changes by project type
 commit_by_project_type() {
     local project_type="$1"
@@ -320,8 +343,14 @@ commit_by_project_type() {
     
     log "INFO" "Committing with message: $commit_message"
     
-    # Create commit
-    git commit -m "$commit_message"
+    # Create commit (append owner co-author if configured)
+    local owner_footer
+    owner_footer="$(generate_owner_footer)"
+    if [[ -n "$owner_footer" ]]; then
+        git commit -m "$commit_message" -m "$owner_footer"
+    else
+        git commit -m "$commit_message"
+    fi
     
     log "INFO" "✅ Committed $project_type changes"
 }
@@ -395,6 +424,12 @@ single_commit_workflow() {
     
     # Create single commit with co-authors
     local co_authors=$(generate_co_authors "${contributors[@]}")
+    # Append owner co-author if not already present and not the primary
+    local owner_footer
+    owner_footer="$(generate_owner_footer)"
+    if [[ -n "$owner_footer" && "$co_authors" != *"$OWNER_EMAIL"* ]]; then
+        co_authors+="$owner_footer"$'\n'
+    fi
     if [[ -n "$co_authors" ]]; then
         git commit -m "$commit_message" -m "$co_authors"
     else
@@ -461,6 +496,11 @@ setup_configuration() {
     read -p "DevOps/Infrastructure GitHub username (e.g., datacode-devops): " devops_name
     read -p "DevOps/Infrastructure GitHub email: " devops_email
     
+    echo
+    echo "Always include co-author (your personal identity):"
+    read -p "Owner name (always included as co-author): " owner_name
+    read -p "Owner email: " owner_email
+    
     # Create configuration file
     cat > "$CONFIG_FILE" << EOF
 {
@@ -480,6 +520,10 @@ setup_configuration() {
       "email": "$devops_email", 
       "specialization": ["Terraform", "Docker", "CI/CD", "Infrastructure", "Deployment"]
     }
+  },
+  "owner": {
+    "name": "$owner_name",
+    "email": "$owner_email"
   },
   "project_paths": {
     "frontend": [

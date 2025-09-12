@@ -150,6 +150,13 @@
                                         {{translate($key)}}
                                     </span>
                                 </label>
+                                @elseif($key == 'rental' && addon_published_status('Rental'))
+                                <label class="form-check form--check">
+                                    <input class="form-check-input" type="radio" name="module_type" value="{{$key}}">
+                                    <span class="form-check-label">
+                                        {{translate($key)}}
+                                    </span>
+                                </label>
                                 @endif
                                 @endforeach
                                 </div>

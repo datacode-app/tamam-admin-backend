@@ -116,11 +116,33 @@ class MultilingualExportService
     protected function getTranslatableFields(string $entityType): array
     {
         $fieldMap = [
+            // Core Entities
             'Store' => ['name', 'address'],
             'Item' => ['name', 'description'],
             'Category' => ['name'],
+            'AddOn' => ['name'],
+            'Attribute' => ['name'],
+            'Unit' => ['name'],
+            'Zone' => ['name'],
+            'Brand' => ['name'],
+            'Coupon' => ['title', 'details'],
             'Banner' => ['title'],
-            'Coupon' => ['title', 'details']
+            'FlashSale' => ['title'],
+            'Campaign' => ['title'],
+            
+            // Rental Module Entities
+            'Vehicle' => ['name', 'description'],
+            'VehicleCategory' => ['name'],
+            'VehicleBrand' => ['name'],
+            'VehicleDriver' => ['name'],
+            'Provider' => ['name', 'address'],
+            'RentalCoupon' => ['title', 'details'],
+            'RentalBanner' => ['title'],
+            
+            // Extended Entities
+            'BusinessSettings' => ['value'],
+            'NotificationTemplate' => ['subject', 'body'],
+            'PushNotification' => ['title', 'description']
         ];
         
         return $fieldMap[$entityType] ?? [];

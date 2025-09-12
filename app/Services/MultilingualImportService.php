@@ -13,8 +13,9 @@ class MultilingualImportService
      * @var array
      */
     protected $supportedLanguages = [
-        'ckb' => 'Kurdish Sorani',
-        'ar' => 'Arabic'
+        'en' => 'English',
+        'ar' => 'Arabic',
+        'ckb' => 'Kurdish Sorani'
     ];
 
     /**
@@ -23,22 +24,39 @@ class MultilingualImportService
      * @var array
      */
     protected $translatableFields = [
+        // Core Entities - synced with MultilingualExportService
         'Store' => ['name', 'address'],
         'Item' => ['name', 'description'],
         'Category' => ['name'],
-        'Campaign' => ['title', 'description'],
-        'ItemCampaign' => ['title', 'description'],
-        'Banner' => ['title'],
-        'Coupon' => ['title', 'details'],
-        'Brand' => ['name'],
         'AddOn' => ['name'],
-        'Unit' => ['unit'],
         'Attribute' => ['name'],
+        'Unit' => ['name'], // Changed from 'unit' to 'name' for consistency
         'Zone' => ['name'],
+        'Brand' => ['name'],
+        'Coupon' => ['title', 'details'],
+        'Banner' => ['title'],
+        'FlashSale' => ['title'],
+        'Campaign' => ['title'], // Removed 'description' to match export service
+        
+        // Rental Module Entities - synced with export service
+        'Vehicle' => ['name', 'description'],
+        'VehicleCategory' => ['name'],
+        'VehicleBrand' => ['name'],
+        'VehicleDriver' => ['name'],
+        'Provider' => ['name', 'address'],
+        'RentalCoupon' => ['title', 'details'],
+        'RentalBanner' => ['title'],
+        
+        // Extended Entities - synced with export service
+        'BusinessSettings' => ['value'],
+        'NotificationTemplate' => ['subject', 'body'],
+        'PushNotification' => ['title', 'description'],
+        
+        // Legacy/Additional entities (kept for backward compatibility)
+        'ItemCampaign' => ['title', 'description'],
         'Module' => ['module_name', 'description'],
         'ParcelCategory' => ['name', 'description'],
         'DMVehicle' => ['type', 'model'],
-        'FlashSale' => ['title'],
         'SubscriptionPackage' => ['package_name', 'description'],
     ];
 
@@ -234,6 +252,7 @@ class MultilingualImportService
     public function getLangAliases(string $langCode): array
     {
         $aliases = [
+            'en' => ['en', 'EN', 'en_US', 'english'],
             'ckb' => ['ckb', 'CKB', 'ckb_IQ', 'kurdish', 'sorani'],
             'ar' => ['ar', 'AR', 'ar_IQ', 'arabic'],
         ];

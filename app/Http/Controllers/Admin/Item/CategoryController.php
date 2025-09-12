@@ -7,6 +7,7 @@ use App\Contracts\Repositories\TranslationRepositoryInterface;
 use App\Enums\ExportFileNames\Admin\Category;
 use App\Enums\ViewPaths\Admin\Category as CategoryViewPath;
 use App\Exports\CategoryExport;
+use App\Exports\CategoryListMultilingualExport;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Admin\CategoryAddRequest;
 use App\Http\Requests\Admin\CategoryBulkExportRequest;
@@ -21,6 +22,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
@@ -227,5 +229,49 @@ class CategoryController extends BaseController
             return Excel::download(new CategoryExport($data), Category::EXPORT_CSV);
         }
         return Excel::download(new CategoryExport($data), Category::EXPORT_XLSX);
+    }
+
+    /**
+     * Export categories with multilingual support
+     */
+    public function multilingual_export(Request $request): BinaryFileResponse
+    {
+        $request->validate([
+            'type' => 'required|in:all,id_wise',
+            'start_id' => 'required_if:type,id_wise',
+            'end_id' => 'required_if:type,id_wise',
+        ]);
+
+        // Query building with filters
+        $query = Category::query();
+        
+        // Apply filters based on request
+        if ($request->type == 'id_wise') {
+            $query->whereBetween('id', [$request->start_id, $request->end_id]);
+        }
+
+        // Apply search filters if provided
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Get data with translations
+        $categories = $query->with(['translations' => function($query) {
+            $query->whereIn('locale', ['en', 'ar', 'ckb'])
+                  ->whereIn('key', ['name']);
+        }])->get();
+
+        $data = [
+            'data' => $categories,
+            'search' => $request->search,
+            'from' => $request->from,
+            'to' => $request->to,
+            'module_name' => Config::get('module.current_module_data')['module_name'] ?? 'N/A',
+        ];
+
+        return Excel::download(
+            new CategoryListMultilingualExport($data), 
+            'categories-multilingual-' . now()->format('Y-m-d-H-i-s') . '.xlsx'
+        );
     }
 }
