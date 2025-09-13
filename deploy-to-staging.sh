@@ -98,6 +98,16 @@ ssh -i $SSH_KEY root@$SERVER_IP "
 "
 echo "✅ Application key verified"
 
+# Step 6.5: Run Database Migrations and Seeders
+echo ""
+echo "🗄️  Step 6.5: Running database migrations and seeders..."
+ssh -i $SSH_KEY root@$SERVER_IP "
+    cd $REMOTE_PATH && 
+    php artisan migrate --force &&
+    php artisan db:seed --class=ModuleSeeder --force
+"
+echo "✅ Database migrations and module seeding completed"
+
 # Step 7: Restart PHP-FPM and Nginx
 echo ""
 echo "🔄 Step 7: Restarting services..."

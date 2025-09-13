@@ -46,7 +46,27 @@
   - Module dependencies
   - Directory permissions
 
-### 3. Mandatory Deployment Process
+### 3. Automatic Module Seeding (NEW - Sep 13, 2025)
+
+**Issue Fixed:**
+- Admin and rental modules were not being activated by default
+- Required manual intervention after each deployment
+- Modules missing from database even when addons were published
+
+**Solution Implemented:**
+- Created `ModuleSeeder.php` to automatically create default modules
+- Updated deployment scripts to run `php artisan db:seed --class=ModuleSeeder --force`
+- Added GitHub Actions workflow for automated deployment
+- Modules now created automatically: admin, rental, food, grocery, pharmacy, ecommerce, parcel
+
+**Files Modified:**
+- `database/seeders/ModuleSeeder.php` - NEW
+- `database/seeders/DatabaseSeeder.php` - Updated
+- `deploy-to-staging.sh` - Added module seeding step
+- `deploy-to-production.sh` - Added module seeding step
+- `.github/workflows/deploy.yml` - NEW GitHub Actions workflow
+
+### 4. Mandatory Deployment Process
 
 **Before ANY deployment:**
 ```bash
