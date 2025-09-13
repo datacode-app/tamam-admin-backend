@@ -168,7 +168,7 @@ class AddonController extends Controller
         // Implementation for rental publishing
         $modules = Module::where('module_name', 'Rental')->first();
         if($modules){
-            $modules->module_status = $status;
+            $modules->status = $status;
             $modules->save();
         }
     }
