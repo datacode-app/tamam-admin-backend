@@ -29,11 +29,24 @@ jobs:
       
       - name: 🧪 Test SSH Connection
         run: |
-          ssh -o ConnectTimeout=10 root@${{ secrets.STAGING_SERVER_IP }} "echo '✅ SSH connection successful'"
+          ssh -o ConnectTimeout=10 root@${{ secrets.STAGING_SERVER_IP }} "echo '✅ SSH connection successful to staging server'"
+      
+      - name: 🔙 Prepare Rollback Point
+        run: |
+          echo "Creating rollback point for staging deployment..."
+          ssh root@${{ secrets.STAGING_SERVER_IP }} "
+            cd /var/www &&
+            if [ -d tamam_backup ]; then rm -rf tamam_backup; fi &&
+            if [ -d tamam ]; then cp -r tamam tamam_backup; fi &&
+            echo '✅ Rollback point created at /var/www/tamam_backup'
+          "
       
       - name: 📦 Deploy Laravel Files
         run: |
           echo "🚀 Starting deployment to staging.tamam.shop..."
+          echo "📍 Target: Staging Server (${{ secrets.STAGING_SERVER_IP }})"
+          echo "🗄️ Database: Staging MySQL Cluster"
+          echo "☁️ Storage: tamam-staging DigitalOcean Space"
           
           # Deploy core Laravel files with rsync
           rsync -avz --progress \
@@ -46,14 +59,36 @@ jobs:
             --include='routes/' --include='routes/**' \
             --include='storage/' --include='storage/**' \
             --include='Modules/' --include='Modules/**' \
+            --include='modules_statuses.json' \
             --include='vendor/' --include='vendor/**' \
             --include='artisan' \
             --include='composer.json' \
             --include='composer.lock' \
+            --include='create-staging-env.sh' \
             --exclude='*' \
             ./ root@${{ secrets.STAGING_SERVER_IP }}:/var/www/tamam/
           
-          echo "✅ Files deployed successfully"
+          echo "✅ Files deployed successfully to staging"
+      
+      - name: 🔧 Create Staging Environment
+        run: |
+          echo "Creating staging environment configuration..."
+          echo "📋 Using Staging MySQL Cluster as per branch strategy"
+          
+          ssh root@${{ secrets.STAGING_SERVER_IP }} "
+            cd /var/www/tamam &&
+            chmod +x create-staging-env.sh &&
+            
+            # Replace placeholders with actual secrets
+            sed -i 's/STAGING_DB_PASSWORD_PLACEHOLDER/${{ secrets.STAGING_DB_PASSWORD }}/g' create-staging-env.sh &&
+            sed -i 's/STAGING_SPACES_KEY_PLACEHOLDER/${{ secrets.STAGING_SPACES_KEY }}/g' create-staging-env.sh &&
+            sed -i 's/STAGING_SPACES_SECRET_PLACEHOLDER/${{ secrets.STAGING_SPACES_SECRET }}/g' create-staging-env.sh &&
+            
+            # Execute environment creation script
+            ./create-staging-env.sh &&
+            
+            echo '✅ Staging environment created with staging MySQL cluster'
+          "
       
       - name: 🔧 Set File Permissions
         run: |
@@ -62,14 +97,16 @@ jobs:
             chmod -R 755 /var/www/tamam &&
             chmod -R 775 /var/www/tamam/storage &&
             mkdir -p /var/www/tamam/bootstrap/cache &&
-            chmod -R 775 /var/www/tamam/bootstrap/cache
+            chmod -R 775 /var/www/tamam/bootstrap/cache &&
+            echo '✅ File permissions set correctly'
           "
       
       - name: 📚 Update Dependencies
         run: |
           ssh root@${{ secrets.STAGING_SERVER_IP }} "
             cd /var/www/tamam &&
-            composer install --no-dev --optimize-autoloader --no-interaction
+            composer install --no-dev --optimize-autoloader --no-interaction &&
+            echo '✅ Composer dependencies updated'
           "
       
       - name: 🧹 Clear Laravel Caches
@@ -79,7 +116,57 @@ jobs:
             php artisan config:clear &&
             php artisan route:clear &&
             php artisan cache:clear &&
-            php artisan view:clear
+            php artisan view:clear &&
+            echo '✅ Laravel caches cleared'
+          "
+      
+      - name: 🧪 Verify Module Status
+        run: |
+          echo "Verifying module activation and status..."
+          ssh root@${{ secrets.STAGING_SERVER_IP }} "
+            cd /var/www/tamam &&
+            if [ -f modules_statuses.json ]; then
+              echo '✅ modules_statuses.json deployed successfully'
+              echo 'Module status file contents:'
+              cat modules_statuses.json
+            else
+              echo '⚠️ modules_statuses.json missing - creating default'
+              echo '{\"Rental\": true}' > modules_statuses.json
+            fi &&
+            
+            echo '' &&
+            echo 'Laravel module list:' &&
+            php artisan module:list &&
+            echo '✅ Module verification completed'
+          "
+      
+      - name: 🗄️ Database Migration Strategy
+        run: |
+          echo "Executing staging database migrations..."
+          ssh root@${{ secrets.STAGING_SERVER_IP }} "
+            cd /var/www/tamam &&
+            
+            # Show current migration status
+            echo '📊 Current migration status:' &&
+            php artisan migrate:status &&
+            
+            # Run pending migrations
+            echo '🔄 Running pending migrations...' &&
+            php artisan migrate --force &&
+            
+            # Run module seeders
+            echo '🌱 Running module seeders...' &&
+            php artisan db:seed --class=ModuleSeeder --force &&
+            
+            # Verify critical tables exist
+            echo '🔍 Verifying critical database tables:' &&
+            php artisan tinker --execute='
+              echo \"Users table: \" . (Schema::hasTable(\"users\") ? \"✅\" : \"❌\");
+              echo \"Modules table: \" . (Schema::hasTable(\"modules\") ? \"✅\" : \"❌\");
+              echo \"Orders table: \" . (Schema::hasTable(\"orders\") ? \"✅\" : \"❌\");
+            ' &&
+            
+            echo '✅ Database migrations and verification completed'
           "
       
       - name: 🔑 Generate App Key (if needed)
@@ -87,50 +174,111 @@ jobs:
           ssh root@${{ secrets.STAGING_SERVER_IP }} "
             cd /var/www/tamam &&
             if ! grep -q '^APP_KEY=base64:' .env; then 
-              php artisan key:generate --force
+              echo '🔑 Generating new application key...' &&
+              php artisan key:generate --force &&
+              echo '✅ Application key generated'
+            else
+              echo '✅ Application key already exists'
             fi
           "
       
       - name: 🔄 Restart Services
         run: |
+          echo "Restarting staging server services..."
           ssh root@${{ secrets.STAGING_SERVER_IP }} "
             systemctl restart php8.3-fpm &&
-            systemctl restart nginx
+            systemctl restart nginx &&
+            echo '✅ Services restarted successfully'
           "
       
-      - name: 🧪 Test Deployment
+      - name: 🧪 Test Staging Deployment
         run: |
-          echo "Testing deployment..."
+          echo "Testing staging deployment endpoints..."
+          echo "Waiting for services to fully restart..."
+          sleep 15
           
-          # Test admin dashboard
-          DASHBOARD_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://staging.tamam.shop/admin)
-          echo "Admin Dashboard: $DASHBOARD_STATUS"
+          # Function to test endpoints with detailed error reporting
+          test_endpoint() {
+            local url=$1
+            local name=$2
+            echo "Testing $name at $url..."
+            local status=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$url")
+            echo "$name: HTTP $status"
+            
+            if [[ "$status" =~ ^(200|302)$ ]]; then
+              echo "✅ $name responding correctly"
+              return 0
+            else
+              echo "❌ $name failed (HTTP $status)"
+              echo "Getting error details:"
+              curl -s --connect-timeout 10 --max-time 30 "$url" | head -20
+              return 1
+            fi
+          }
           
-          # Test admin login
-          LOGIN_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://staging.tamam.shop/login/admin)
-          echo "Admin Login: $LOGIN_STATUS"
+          # Test critical endpoints
+          FAILURES=0
+          test_endpoint "https://staging.tamam.shop/admin" "Admin Dashboard" || ((FAILURES++))
+          test_endpoint "https://staging.tamam.shop/login/admin" "Admin Login" || ((FAILURES++))
+          test_endpoint "https://staging.tamam.shop/admin/addon" "Addon Management" || ((FAILURES++))
+          test_endpoint "https://staging.tamam.shop/admin/dashboard" "Dashboard Route" || ((FAILURES++))
           
-          # Test addon management
-          ADDON_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://staging.tamam.shop/admin/addon)
-          echo "Addon Management: $ADDON_STATUS"
-          
-          # Verify all critical routes are working
-          if [[ "$DASHBOARD_STATUS" =~ ^(200|302)$ ]] && [[ "$LOGIN_STATUS" =~ ^(200|302)$ ]] && [[ "$ADDON_STATUS" =~ ^(200|302)$ ]]; then
+          if [ $FAILURES -eq 0 ]; then
             echo "✅ All critical routes are responding correctly"
           else
-            echo "❌ Some routes are not responding correctly"
+            echo "❌ $FAILURES route(s) failed - checking server logs"
+            ssh root@${{ secrets.STAGING_SERVER_IP }} "
+              echo '🔍 Recent Laravel logs:' &&
+              tail -50 /var/www/tamam/storage/logs/laravel.log &&
+              echo '🔍 Recent PHP-FPM logs:' &&
+              tail -20 /var/log/php8.3-fpm.log &&
+              echo '🔍 Recent Nginx error logs:' &&
+              tail -20 /var/log/nginx/error.log
+            "
             exit 1
           fi
       
-      - name: 📊 Deployment Summary
+      - name: 📋 Monitor Staging System Status
         if: always()
         run: |
+          echo "Checking staging system status..."
+          ssh root@${{ secrets.STAGING_SERVER_IP }} "
+            echo '🔍 Recent Laravel errors (if any):' &&
+            tail -20 /var/www/tamam/storage/logs/laravel.log | grep -E '(ERROR|CRITICAL|EMERGENCY)' || echo 'No recent errors found' &&
+            
+            echo '' &&
+            echo '🔍 PHP-FPM status:' &&
+            systemctl status php8.3-fpm --no-pager -l | head -10 &&
+            
+            echo '' &&
+            echo '🔍 Nginx status:' &&
+            systemctl status nginx --no-pager -l | head -10 &&
+            
+            echo '' &&
+            echo '🔍 Disk usage:' &&
+            df -h /var/www &&
+            
+            echo '' &&
+            echo '🔍 Memory usage:' &&
+            free -h
+          "
+      
+      - name: 📊 Staging Deployment Summary
+        if: always()
+        run: |
+          echo ""
           echo "🎉 STAGING DEPLOYMENT COMPLETE!"
           echo "📍 Admin URL: https://staging.tamam.shop/admin"
           echo "📍 Login URL: https://staging.tamam.shop/login/admin"
+          echo "🗄️ Database: Staging MySQL Cluster (tamam-staging-db-do-user-19403128-0.j.db.ondigitalocean.com)"
+          echo "☁️ Storage: tamam-staging DigitalOcean Space"
           echo "⏰ Deployed at: $(date)"
           echo ""
           echo "🔍 Next Steps:"
-          echo "  • Verify admin login functionality"
-          echo "  • Test routing fixes are working"
-          echo "  • Monitor application logs"
+          echo "  • Test all admin functionality thoroughly"
+          echo "  • Verify database connectivity and operations"
+          echo "  • Test module functionality (if applicable)"
+          echo "  • Validate file uploads and storage"
+          echo "  • Check all admin routes and permissions"
+          echo ""
+          echo "📋 If deployment successful, staging is ready for production promotion"
