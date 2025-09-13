@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             BusinessSettingSeeder::class,
             DataSettingSeeder::class,
             EmailTemplateSeeder::class,
+            ModuleSeeder::class, // Add default modules (admin, rental, etc.)
         ]);
     }
 }

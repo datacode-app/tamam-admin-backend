@@ -107,11 +107,15 @@ ssh -i $SSH_KEY root@$SERVER_IP "
 "
 echo "✅ Application key verified"
 
-# Step 8: Skip Migrations (Database already populated from staging)
+# Step 8: Run Database Migrations and Seeders
 echo ""
-echo "🗄️  Step 8: Skipping migrations (database already populated)..."
-echo "ℹ️  Production database was populated from staging data"
-echo "✅ Database migration step skipped"
+echo "🗄️  Step 8: Running database migrations and seeders..."
+ssh -i $SSH_KEY root@$SERVER_IP "
+    cd $REMOTE_PATH && 
+    php artisan migrate --force &&
+    php artisan db:seed --class=ModuleSeeder --force
+"
+echo "✅ Database migrations and module seeding completed"
 
 # Step 9: Restart PHP-FPM and Nginx
 echo ""
