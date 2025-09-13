@@ -15,14 +15,16 @@ class SMSModuleController extends Controller
     {
         $published_status = addon_published_status('Gateways');
 
-        $routes = config('addon_admin_routes');
+        $routes = config('addon_admin_routes') ?? [];
         $desiredName = 'sms_setup';
         $payment_url = '';
         foreach ($routes as $routeArray) {
-            foreach ($routeArray as $route) {
-                if ($route['name'] === $desiredName) {
-                    $payment_url = $route['url'];
-                    break 2;
+            if (is_array($routeArray)) {
+                foreach ($routeArray as $route) {
+                    if (is_array($route) && isset($route['name']) && $route['name'] === $desiredName) {
+                        $payment_url = $route['url'];
+                        break 2;
+                    }
                 }
             }
         }

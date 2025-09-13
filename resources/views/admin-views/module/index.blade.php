@@ -48,7 +48,7 @@
                     <div>
                         <select id="module_type" name="module_type" class="form-control h--45px set-filter" data-url="{{ url()->full() }}" data-filter="module_type">
                             <option value="all" {{ request('module_type') == 'all' ? 'selected' : '' }}>{{ translate('messages.all_module_type') }}</option>
-                            @foreach (config('module.module_type') as $key)
+                            @foreach (config('module.module_type') ?? [] as $key)
                                 <option class="" value="{{$key}}" {{ request('module_type') == $key ? 'selected' : '' }}>{{translate($key)}}</option>
                             @endforeach
                         </select>
