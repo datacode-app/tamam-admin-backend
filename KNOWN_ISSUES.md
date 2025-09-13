@@ -91,6 +91,48 @@ Automatically applied via updated `DatabaseSeeder`.
 - `database/seeders/DatabaseSeeder.php`
 - `MODULE_ACTIVATION_FIX.md` (NEW) - Detailed documentation
 
+### Issue #1.1: Rental Module Not Visible Due to File Activator (modules_statuses.json)
+**Status**: ✅ **RESOLVED** - Deployment now syncs and verifies activator file
+
+**Symptoms**:
+- Rental module installed, addon published, DB status = 1, routes registered
+- Still not shown in admin UI or some parts gated
+
+**Root Cause**:
+- We use `nwidart/laravel-modules` with the `file` activator configured:
+  - `config/modules.php` → `activators.file.statuses-file = base_path('modules_statuses.json')`
+- If `modules_statuses.json` is missing or Rental is set to false, the module may be considered disabled by the activator even if DB shows active.
+- Additionally, duplicate module directories (`Modules/Rental` and `Modules/Modules/Rental`) caused confusion during routing and status checks.
+
+**Fix Implemented**:
+- Removed duplicate directory `Modules/Modules/Rental` (kept canonical `Modules/Rental`).
+- Ensured `modules_statuses.json` is versioned and deployed:
+  - Updated `deploy-to-staging.sh` and `deploy-to-production.sh` to rsync `modules_statuses.json`.
+  - Added a verification step on remote servers to print `modules_statuses.json` and run `php artisan module:list`.
+  - If the file is missing, create it with Rental enabled by default:
+    ```json
+    {
+      "Rental": true
+    }
+    ```
+
+**Validation Commands**:
+```bash
+php artisan module:list | cat
+cat modules_statuses.json
+php artisan tinker --execute="echo addon_published_status('Rental');"
+```
+
+**Files Modified**:
+- `deploy-to-staging.sh` (sync and verify `modules_statuses.json`)
+- `deploy-to-production.sh` (sync and verify `modules_statuses.json`)
+- Removed duplicate: `Modules/Modules/Rental` (keep only `Modules/Rental`)
+
+**Prevention**:
+- Keep `modules_statuses.json` in repo and in deployments.
+- Avoid duplicate module directories; always use `Modules/<ModuleName>`.
+- CI/CD prints `module:list` every deployment to catch disabled modules early.
+
 ---
 
 ## Configuration & Null Safety Issues

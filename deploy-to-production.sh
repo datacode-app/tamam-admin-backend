@@ -45,6 +45,7 @@ rsync -avz --progress \
     --include='routes/' --include='routes/**' \
     --include='storage/' --include='storage/**' \
     --include='Modules/' --include='Modules/**' \
+    --include='modules_statuses.json' \
     --include='vendor/' --include='vendor/**' \
     --include='artisan' \
     --include='composer.json' \
@@ -95,6 +96,23 @@ ssh -i $SSH_KEY root@$SERVER_IP "
     php artisan view:clear
 "
 echo "✅ Laravel caches cleared"
+
+# Step 6.5: Verify module activation file and module status
+echo ""
+echo "🧪 Step 6.5: Verifying module activation (modules_statuses.json & module:list)..."
+ssh -i $SSH_KEY root@$SERVER_IP "
+    cd $REMOTE_PATH && 
+    if [ -f modules_statuses.json ]; then
+        echo '✅ modules_statuses.json present'
+        echo 'Current module activation file:'
+        cat modules_statuses.json | sed -e 's/\"/\"/g'
+    else
+        echo '⚠️  modules_statuses.json missing - creating default with Rental enabled'
+        echo '{\n  \"Rental\": true\n}' > modules_statuses.json
+    fi &&
+    php artisan module:list | cat
+"
+echo "✅ Module activation verified"
 
 # Step 7: Generate Application Key (if needed)
 echo ""
