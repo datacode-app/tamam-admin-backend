@@ -2,7 +2,7 @@ name: 🚀 Deploy to Staging Server
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ staging ]
   workflow_dispatch:  # Allow manual triggering
 
 jobs:
