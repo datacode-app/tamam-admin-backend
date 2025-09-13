@@ -78,73 +78,71 @@ jobs:
           ssh root@${{ secrets.STAGING_SERVER_IP }} "
             cd /var/www/tamam &&
             
-            # Create .env file directly with staging configuration
-            cat > .env << 'ENVEOF'
-APP_NAME=Laravel
-APP_ENV=staging
-APP_KEY=base64:PMl05FDKUiHKrMNi7Z91lPgp8Zbv5z6OnPA42RuYdGw=
-APP_DEBUG=false
-APP_URL=https://staging.tamam.shop
-
-LOG_CHANNEL=stack
-LOG_DEPRECATIONS_CHANNEL=null
-LOG_LEVEL=info
-
-# Staging Branch - Uses Staging MySQL Cluster (DigitalOcean)
-DB_CONNECTION=mysql
-DB_HOST=tamam-staging-db-do-user-19403128-0.j.db.ondigitalocean.com
-DB_PORT=25060
-DB_DATABASE=tamamdb_staging
-DB_USERNAME=doadmin
-DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}
-
-BROADCAST_DRIVER=log
-CACHE_DRIVER=file
-FILESYSTEM_DRIVER=s3
-QUEUE_CONNECTION=sync
-SESSION_DRIVER=file
-SESSION_LIFETIME=120
-
-MEMCACHED_HOST=127.0.0.1
-
-REDIS_HOST=127.0.0.1
-REDIS_PASSWORD=null
-REDIS_PORT=6379
-
-# Staging Mail Configuration
-MAIL_MAILER=smtp
-MAIL_HOST=mailhog
-MAIL_PORT=1025
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
-MAIL_FROM_ADDRESS=noreply@staging.tamam.shop
-MAIL_FROM_NAME=\"\${APP_NAME}\"
-
-# Staging DigitalOcean Spaces Configuration
-AWS_ACCESS_KEY_ID=${{ secrets.STAGING_SPACES_KEY }}
-AWS_SECRET_ACCESS_KEY=${{ secrets.STAGING_SPACES_SECRET }}
-AWS_DEFAULT_REGION=fra1
-AWS_BUCKET=tamam-staging
-AWS_ENDPOINT=https://fra1.digitaloceanspaces.com
-AWS_USE_PATH_STYLE_ENDPOINT=false
-AWS_URL=https://tamam-staging.fra1.cdn.digitaloceanspaces.com
-
-PUSHER_APP_ID=
-PUSHER_APP_KEY=
-PUSHER_APP_SECRET=
-PUSHER_HOST=
-PUSHER_PORT=443
-PUSHER_SCHEME=https
-PUSHER_APP_CLUSTER=mt1
-
-VITE_APP_NAME=\"\${APP_NAME}\"
-VITE_PUSHER_APP_KEY=\"\${PUSHER_APP_KEY}\"
-VITE_PUSHER_HOST=\"\${PUSHER_HOST}\"
-VITE_PUSHER_PORT=\"\${PUSHER_PORT}\"
-VITE_PUSHER_SCHEME=\"\${PUSHER_SCHEME}\"
-VITE_PUSHER_APP_CLUSTER=\"\${PUSHER_APP_CLUSTER}\"
-ENVEOF
+            # Create .env file with staging configuration
+            echo 'APP_NAME=Laravel' > .env &&
+            echo 'APP_ENV=staging' >> .env &&
+            echo 'APP_KEY=base64:PMl05FDKUiHKrMNi7Z91lPgp8Zbv5z6OnPA42RuYdGw=' >> .env &&
+            echo 'APP_DEBUG=false' >> .env &&
+            echo 'APP_URL=https://staging.tamam.shop' >> .env &&
+            echo '' >> .env &&
+            echo 'LOG_CHANNEL=stack' >> .env &&
+            echo 'LOG_DEPRECATIONS_CHANNEL=null' >> .env &&
+            echo 'LOG_LEVEL=info' >> .env &&
+            echo '' >> .env &&
+            echo '# Staging Branch - Uses Staging MySQL Cluster (DigitalOcean)' >> .env &&
+            echo 'DB_CONNECTION=mysql' >> .env &&
+            echo 'DB_HOST=tamam-staging-db-do-user-19403128-0.j.db.ondigitalocean.com' >> .env &&
+            echo 'DB_PORT=25060' >> .env &&
+            echo 'DB_DATABASE=tamamdb_staging' >> .env &&
+            echo 'DB_USERNAME=doadmin' >> .env &&
+            echo 'DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}' >> .env &&
+            echo '' >> .env &&
+            echo 'BROADCAST_DRIVER=log' >> .env &&
+            echo 'CACHE_DRIVER=file' >> .env &&
+            echo 'FILESYSTEM_DRIVER=s3' >> .env &&
+            echo 'QUEUE_CONNECTION=sync' >> .env &&
+            echo 'SESSION_DRIVER=file' >> .env &&
+            echo 'SESSION_LIFETIME=120' >> .env &&
+            echo '' >> .env &&
+            echo 'MEMCACHED_HOST=127.0.0.1' >> .env &&
+            echo '' >> .env &&
+            echo 'REDIS_HOST=127.0.0.1' >> .env &&
+            echo 'REDIS_PASSWORD=null' >> .env &&
+            echo 'REDIS_PORT=6379' >> .env &&
+            echo '' >> .env &&
+            echo '# Staging Mail Configuration' >> .env &&
+            echo 'MAIL_MAILER=smtp' >> .env &&
+            echo 'MAIL_HOST=mailhog' >> .env &&
+            echo 'MAIL_PORT=1025' >> .env &&
+            echo 'MAIL_USERNAME=null' >> .env &&
+            echo 'MAIL_PASSWORD=null' >> .env &&
+            echo 'MAIL_ENCRYPTION=null' >> .env &&
+            echo 'MAIL_FROM_ADDRESS=noreply@staging.tamam.shop' >> .env &&
+            echo 'MAIL_FROM_NAME=\"\${APP_NAME}\"' >> .env &&
+            echo '' >> .env &&
+            echo '# Staging DigitalOcean Spaces Configuration' >> .env &&
+            echo 'AWS_ACCESS_KEY_ID=${{ secrets.STAGING_SPACES_KEY }}' >> .env &&
+            echo 'AWS_SECRET_ACCESS_KEY=${{ secrets.STAGING_SPACES_SECRET }}' >> .env &&
+            echo 'AWS_DEFAULT_REGION=fra1' >> .env &&
+            echo 'AWS_BUCKET=tamam-staging' >> .env &&
+            echo 'AWS_ENDPOINT=https://fra1.digitaloceanspaces.com' >> .env &&
+            echo 'AWS_USE_PATH_STYLE_ENDPOINT=false' >> .env &&
+            echo 'AWS_URL=https://tamam-staging.fra1.cdn.digitaloceanspaces.com' >> .env &&
+            echo '' >> .env &&
+            echo 'PUSHER_APP_ID=' >> .env &&
+            echo 'PUSHER_APP_KEY=' >> .env &&
+            echo 'PUSHER_APP_SECRET=' >> .env &&
+            echo 'PUSHER_HOST=' >> .env &&
+            echo 'PUSHER_PORT=443' >> .env &&
+            echo 'PUSHER_SCHEME=https' >> .env &&
+            echo 'PUSHER_APP_CLUSTER=mt1' >> .env &&
+            echo '' >> .env &&
+            echo 'VITE_APP_NAME=\"\${APP_NAME}\"' >> .env &&
+            echo 'VITE_PUSHER_APP_KEY=\"\${PUSHER_APP_KEY}\"' >> .env &&
+            echo 'VITE_PUSHER_HOST=\"\${PUSHER_HOST}\"' >> .env &&
+            echo 'VITE_PUSHER_PORT=\"\${PUSHER_PORT}\"' >> .env &&
+            echo 'VITE_PUSHER_SCHEME=\"\${PUSHER_SCHEME}\"' >> .env &&
+            echo 'VITE_PUSHER_APP_CLUSTER=\"\${PUSHER_APP_CLUSTER}\"' >> .env &&
             
             echo '✅ Staging environment created with staging MySQL cluster'
           "
