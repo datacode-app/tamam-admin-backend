@@ -3,27 +3,28 @@
 # 🔧 Staging Environment Creator
 # Creates .env file on staging server with proper credentials
 # This script should be run ON the staging server
+# Uses Staging MySQL Cluster (DigitalOcean) as per branch strategy
 
 echo "🔧 Creating staging environment file..."
 
 cat > /var/www/tamam/.env << 'EOF'
 APP_NAME=Laravel
 APP_ENV=staging
-APP_KEY=base64:EvCdLnWM9f4hNotbvmwTo1w+PM2693O9gyknfhNozHs=
-APP_DEBUG=true
+APP_KEY=base64:PMl05FDKUiHKrMNi7Z91lPgp8Zbv5z6OnPA42RuYdGw=
+APP_DEBUG=false
 APP_URL=https://staging.tamam.shop
 
 LOG_CHANNEL=stack
 LOG_DEPRECATIONS_CHANNEL=null
-LOG_LEVEL=debug
+LOG_LEVEL=info
 
-# Production Database Configuration (Shared with staging)
+# Staging Branch - Uses Staging MySQL Cluster (DigitalOcean)
 DB_CONNECTION=mysql
-DB_HOST=tamam-production-db-do-user-19403128-0.j.db.ondigitalocean.com
+DB_HOST=tamam-staging-db-do-user-19403128-0.j.db.ondigitalocean.com
 DB_PORT=25060
-DB_DATABASE=tamamdb
+DB_DATABASE=tamamdb_staging
 DB_USERNAME=doadmin
-DB_PASSWORD=AVNS_biT5d15EkImWV1cfqYO
+DB_PASSWORD=STAGING_DB_PASSWORD_PLACEHOLDER
 
 BROADCAST_DRIVER=log
 CACHE_DRIVER=file
@@ -38,20 +39,19 @@ REDIS_HOST=127.0.0.1
 REDIS_PASSWORD=null
 REDIS_PORT=6379
 
-# Staging Mail Configuration (needs to be updated with real SMTP)
+# Staging Mail Configuration
 MAIL_MAILER=smtp
 MAIL_HOST=mailhog
 MAIL_PORT=1025
 MAIL_USERNAME=null
 MAIL_PASSWORD=null
 MAIL_ENCRYPTION=null
-MAIL_FROM_ADDRESS=noreply@tamam.shop
+MAIL_FROM_ADDRESS=noreply@staging.tamam.shop
 MAIL_FROM_NAME="${APP_NAME}"
 
 # Staging DigitalOcean Spaces Configuration
-# (Uses AWS S3-compatible API variables for Laravel compatibility)
-AWS_ACCESS_KEY_ID=DO00Z4JHC9TMVTGTGVWZ
-AWS_SECRET_ACCESS_KEY=5yVY4d8XOppSQfH7YRINRpY9jZ0UU/dw3+3GhdiYCro
+AWS_ACCESS_KEY_ID=STAGING_SPACES_KEY_PLACEHOLDER
+AWS_SECRET_ACCESS_KEY=STAGING_SPACES_SECRET_PLACEHOLDER
 AWS_DEFAULT_REGION=fra1
 AWS_BUCKET=tamam-staging
 AWS_ENDPOINT=https://fra1.digitaloceanspaces.com
@@ -74,10 +74,7 @@ VITE_PUSHER_SCHEME="${PUSHER_SCHEME}"
 VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 EOF
 
-echo "✅ Staging environment file created with actual credentials"
-echo "🔧 Configuration Details:"
-echo "  - Environment: staging"
-echo "  - Debug Mode: enabled"
-echo "  - Database: Production database (shared)"
-echo "  - Storage: tamam-staging bucket"
-echo "  - Domain: staging.tamam.shop"
+echo "✅ Staging environment template created"
+echo "⚠️  IMPORTANT: Replace placeholders with actual staging credentials!"
+echo "📍 Database: Uses Staging MySQL Cluster (tamam-staging-db-do-user-19403128-0.j.db.ondigitalocean.com)"
+echo "📍 Storage: Uses Staging DigitalOcean Spaces (tamam-staging bucket)"

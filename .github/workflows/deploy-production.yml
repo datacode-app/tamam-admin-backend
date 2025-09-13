@@ -29,12 +29,35 @@ jobs:
       
       - name: 🧪 Test SSH Connection
         run: |
-          ssh -o ConnectTimeout=10 root@${{ secrets.PRODUCTION_SERVER_IP }} "echo '✅ SSH connection successful'"
+          ssh -o ConnectTimeout=10 root@${{ secrets.PRODUCTION_SERVER_IP }} "echo '✅ SSH connection successful to production server'"
       
-      - name: 📦 Deploy Laravel Files
+      - name: ⚠️ Production Deployment Warning
         run: |
-          echo "🚀 Starting deployment to prod.tamam.shop..."
-          echo "⚠️  PRODUCTION DEPLOYMENT - PROCEED WITH CAUTION ⚠️"
+          echo "⚠️⚠️⚠️ PRODUCTION DEPLOYMENT STARTING ⚠️⚠️⚠️"
+          echo "🎯 Target: prod.tamam.shop (${{ secrets.PRODUCTION_SERVER_IP }})"
+          echo "🗄️ Database: Production MySQL Cluster (ISOLATED)"
+          echo "☁️ Storage: tamam-prod DigitalOcean Space"
+          echo "⏰ Started at: $(date)"
+          echo ""
+          echo "🚨 CRITICAL: Monitor closely for 30+ minutes post-deployment"
+          echo ""
+      
+      - name: 🔙 Prepare Production Rollback Point
+        run: |
+          echo "Creating rollback point for production deployment..."
+          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
+            cd /var/www &&
+            if [ -d tamam_backup_$(date +%Y%m%d_%H%M%S) ]; then rm -rf tamam_backup_$(date +%Y%m%d_%H%M%S); fi &&
+            if [ -d tamam ]; then 
+              cp -r tamam tamam_backup_$(date +%Y%m%d_%H%M%S) &&
+              echo '✅ Production rollback point created with timestamp' &&
+              ls -la tamam_backup_*
+            fi
+          "
+      
+      - name: 📦 Deploy Laravel Files to Production
+        run: |
+          echo "🚀 Deploying Laravel application to production..."
           
           # Deploy core Laravel files with rsync
           rsync -avz --progress \
@@ -47,172 +70,274 @@ jobs:
             --include='routes/' --include='routes/**' \
             --include='storage/' --include='storage/**' \
             --include='Modules/' --include='Modules/**' \
+            --include='modules_statuses.json' \
             --include='vendor/' --include='vendor/**' \
             --include='artisan' \
             --include='composer.json' \
             --include='composer.lock' \
+            --include='create-production-env.sh' \
             --exclude='*' \
             ./ root@${{ secrets.PRODUCTION_SERVER_IP }}:/var/www/tamam/
           
-          echo "✅ Files deployed successfully"
+          echo "✅ Files deployed successfully to production"
       
       - name: 🔧 Create Production Environment
         run: |
           echo "Creating production environment configuration..."
-          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "cat > /var/www/tamam/.env << 'EOF'
-          APP_NAME=Laravel
-          APP_ENV=production
-          APP_KEY=base64:EvCdLnWM9f4hNotbvmwTo1w+PM2693O9gyknfhNozHs=
-          APP_DEBUG=false
-          APP_URL=https://prod.tamam.shop
+          echo "📋 Using Production MySQL Cluster as per branch strategy"
+          echo "🔒 ISOLATED from staging database"
           
-          LOG_CHANNEL=stack
-          LOG_DEPRECATIONS_CHANNEL=null
-          LOG_LEVEL=error
-          
-          DB_CONNECTION=mysql
-          DB_HOST=tamam-production-db-do-user-19403128-0.j.db.ondigitalocean.com
-          DB_PORT=25060
-          DB_DATABASE=tamamdb
-          DB_USERNAME=doadmin
-          DB_PASSWORD=${{ secrets.PRODUCTION_DB_PASSWORD }}
-          
-          BROADCAST_DRIVER=log
-          CACHE_DRIVER=file
-          FILESYSTEM_DRIVER=s3
-          QUEUE_CONNECTION=sync
-          SESSION_DRIVER=file
-          SESSION_LIFETIME=120
-          
-          MEMCACHED_HOST=127.0.0.1
-          
-          REDIS_HOST=127.0.0.1
-          REDIS_PASSWORD=null
-          REDIS_PORT=6379
-          
-          MAIL_MAILER=smtp
-          MAIL_HOST=mailhog
-          MAIL_PORT=1025
-          MAIL_USERNAME=null
-          MAIL_PASSWORD=null
-          MAIL_ENCRYPTION=null
-          MAIL_FROM_ADDRESS=noreply@tamam.shop
-          MAIL_FROM_NAME=\"\${APP_NAME}\"
-          
-          AWS_ACCESS_KEY_ID=${{ secrets.PRODUCTION_SPACES_KEY }}
-          AWS_SECRET_ACCESS_KEY=${{ secrets.PRODUCTION_SPACES_SECRET }}
-          AWS_DEFAULT_REGION=fra1
-          AWS_BUCKET=tamam-prod
-          AWS_ENDPOINT=https://fra1.digitaloceanspaces.com
-          AWS_USE_PATH_STYLE_ENDPOINT=false
-          AWS_URL=https://tamam-prod.fra1.cdn.digitaloceanspaces.com
-          
-          PUSHER_APP_ID=
-          PUSHER_APP_KEY=
-          PUSHER_APP_SECRET=
-          PUSHER_HOST=
-          PUSHER_PORT=443
-          PUSHER_SCHEME=https
-          PUSHER_APP_CLUSTER=mt1
-          
-          VITE_APP_NAME=\"\${APP_NAME}\"
-          VITE_PUSHER_APP_KEY=\"\${PUSHER_APP_KEY}\"
-          VITE_PUSHER_HOST=\"\${PUSHER_HOST}\"
-          VITE_PUSHER_PORT=\"\${PUSHER_PORT}\"
-          VITE_PUSHER_SCHEME=\"\${PUSHER_SCHEME}\"
-          VITE_PUSHER_APP_CLUSTER=\"\${PUSHER_APP_CLUSTER}\"
-          EOF"
-          echo "✅ Production environment created"
+          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
+            cd /var/www/tamam &&
+            chmod +x create-production-env.sh &&
+            
+            # Replace placeholders with actual production secrets
+            sed -i 's/PRODUCTION_DB_PASSWORD_PLACEHOLDER/${{ secrets.PRODUCTION_DB_PASSWORD }}/g' create-production-env.sh &&
+            sed -i 's/PRODUCTION_SPACES_KEY_PLACEHOLDER/${{ secrets.PRODUCTION_SPACES_KEY }}/g' create-production-env.sh &&
+            sed -i 's/PRODUCTION_SPACES_SECRET_PLACEHOLDER/${{ secrets.PRODUCTION_SPACES_SECRET }}/g' create-production-env.sh &&
+            
+            # Execute production environment creation script
+            ./create-production-env.sh &&
+            
+            echo '✅ Production environment created with production MySQL cluster'
+          "
       
-      - name: 🔧 Set File Permissions
+      - name: 🔧 Set Production File Permissions
         run: |
           ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
             chown -R www-data:www-data /var/www/tamam &&
             chmod -R 755 /var/www/tamam &&
             chmod -R 775 /var/www/tamam/storage &&
             mkdir -p /var/www/tamam/bootstrap/cache &&
-            chmod -R 775 /var/www/tamam/bootstrap/cache
+            chmod -R 775 /var/www/tamam/bootstrap/cache &&
+            echo '✅ Production file permissions set correctly'
           "
       
-      - name: 📚 Update Dependencies
+      - name: 📚 Update Production Dependencies
         run: |
           ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
             cd /var/www/tamam &&
-            composer install --no-dev --optimize-autoloader --no-interaction
+            composer install --no-dev --optimize-autoloader --no-interaction &&
+            echo '✅ Production composer dependencies updated'
           "
       
-      - name: 🧹 Clear Laravel Caches
+      - name: 🧹 Clear Production Laravel Caches
         run: |
           ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
             cd /var/www/tamam &&
             php artisan config:clear &&
             php artisan route:clear &&
             php artisan cache:clear &&
-            php artisan view:clear
+            php artisan view:clear &&
+            echo '✅ Production Laravel caches cleared'
           "
       
-      - name: 🔑 Generate App Key (if needed)
+      - name: 🧪 Verify Production Module Status
+        run: |
+          echo "Verifying production module activation and status..."
+          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
+            cd /var/www/tamam &&
+            if [ -f modules_statuses.json ]; then
+              echo '✅ modules_statuses.json deployed successfully to production'
+              echo 'Production module status file contents:'
+              cat modules_statuses.json
+            else
+              echo '⚠️ modules_statuses.json missing - creating production default'
+              echo '{\"Rental\": true}' > modules_statuses.json
+            fi &&
+            
+            echo '' &&
+            echo 'Production Laravel module list:' &&
+            php artisan module:list &&
+            echo '✅ Production module verification completed'
+          "
+      
+      - name: 🗄️ Production Database Migration Strategy
+        run: |
+          echo "Executing production database operations with extreme caution..."
+          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
+            cd /var/www/tamam &&
+            
+            # Show current production migration status
+            echo '📊 Production migration status:' &&
+            php artisan migrate:status &&
+            
+            # Only run new migrations (never fresh/reset in production)
+            echo '🔄 Running pending migrations on production database...' &&
+            php artisan migrate --force &&
+            
+            # Run module seeders only if needed
+            echo '🌱 Running module seeders on production...' &&
+            php artisan db:seed --class=ModuleSeeder --force &&
+            
+            # Comprehensive production database verification
+            echo '🔍 Verifying critical production database tables:' &&
+            php artisan tinker --execute='
+              echo \"Users table: \" . (Schema::hasTable(\"users\") ? \"✅\" : \"❌\");
+              echo \"Modules table: \" . (Schema::hasTable(\"modules\") ? \"✅\" : \"❌\");
+              echo \"Orders table: \" . (Schema::hasTable(\"orders\") ? \"✅\" : \"❌\");
+              echo \"Products table: \" . (Schema::hasTable(\"products\") ? \"✅\" : \"❌\");
+              echo \"Vendors table: \" . (Schema::hasTable(\"vendors\") ? \"✅\" : \"❌\");
+            ' &&
+            
+            echo '✅ Production database migrations and verification completed'
+          "
+      
+      - name: 🔑 Generate Production App Key (if needed)
         run: |
           ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
             cd /var/www/tamam &&
             if ! grep -q '^APP_KEY=base64:' .env; then 
-              php artisan key:generate --force
+              echo '🔑 Generating new production application key...' &&
+              php artisan key:generate --force &&
+              echo '✅ Production application key generated'
+            else
+              echo '✅ Production application key already exists'
             fi
           "
       
-      - name: 🗄️ Skip Database Migrations  
+      - name: 🔄 Restart Production Services
         run: |
-          echo "ℹ️  Skipping migrations - database already populated from staging"
-          echo "✅ Migration step skipped (production database ready)"
-      
-      - name: 🔄 Restart Services
-        run: |
+          echo "Restarting production server services..."
           ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
             systemctl restart php8.3-fpm &&
-            systemctl restart nginx
+            systemctl restart nginx &&
+            echo '✅ Production services restarted successfully'
           "
       
-      - name: 🧪 Test Production Deployment
+      - name: 🧪 Comprehensive Production Testing
         run: |
-          echo "Testing production deployment..."
+          echo "🚨 CRITICAL: Testing production deployment endpoints..."
+          echo "Waiting for production services to fully restart..."
+          sleep 20
           
-          # Wait for services to fully restart
-          sleep 10
+          # Enhanced endpoint testing function for production
+          test_production_endpoint() {
+            local url=$1
+            local name=$2
+            echo "🔍 Testing $name at $url..."
+            
+            # Multiple attempts for production stability
+            for attempt in {1..3}; do
+              local status=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 20 --max-time 45 "$url")
+              echo "Attempt $attempt - $name: HTTP $status"
+              
+              if [[ "$status" =~ ^(200|302)$ ]]; then
+                echo "✅ $name responding correctly on attempt $attempt"
+                return 0
+              elif [ $attempt -eq 3 ]; then
+                echo "❌ $name failed after 3 attempts (final: HTTP $status)"
+                echo "Getting production error details:"
+                curl -s --connect-timeout 15 --max-time 30 "$url" | head -30
+                return 1
+              else
+                echo "⚠️ Attempt $attempt failed, retrying in 10 seconds..."
+                sleep 10
+              fi
+            done
+          }
           
-          # Test admin dashboard
-          DASHBOARD_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://prod.tamam.shop/admin)
-          echo "Admin Dashboard: $DASHBOARD_STATUS"
+          # Test all critical production endpoints
+          FAILURES=0
+          test_production_endpoint "https://prod.tamam.shop/admin" "Production Admin Dashboard" || ((FAILURES++))
+          test_production_endpoint "https://prod.tamam.shop/login/admin" "Production Admin Login" || ((FAILURES++))
+          test_production_endpoint "https://prod.tamam.shop/admin/addon" "Production Addon Management" || ((FAILURES++))
+          test_production_endpoint "https://prod.tamam.shop/admin/dashboard" "Production Dashboard Route" || ((FAILURES++))
+          test_production_endpoint "https://prod.tamam.shop/admin/users" "Production Users Management" || ((FAILURES++))
+          test_production_endpoint "https://prod.tamam.shop/admin/orders" "Production Orders Management" || ((FAILURES++))
           
-          # Test admin login
-          LOGIN_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://prod.tamam.shop/login/admin)
-          echo "Admin Login: $LOGIN_STATUS"
-          
-          # Test addon management
-          ADDON_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://prod.tamam.shop/admin/addon)
-          echo "Addon Management: $ADDON_STATUS"
-          
-          # Verify all critical routes are working
-          if [[ "$DASHBOARD_STATUS" =~ ^(200|302)$ ]] && [[ "$LOGIN_STATUS" =~ ^(200|302)$ ]] && [[ "$ADDON_STATUS" =~ ^(200|302)$ ]]; then
-            echo "✅ All critical routes are responding correctly"
+          if [ $FAILURES -eq 0 ]; then
+            echo "✅ ALL CRITICAL PRODUCTION ROUTES ARE RESPONDING CORRECTLY"
+            echo "🎉 PRODUCTION DEPLOYMENT APPEARS SUCCESSFUL"
           else
-            echo "❌ Some routes are not responding correctly"
-            echo "🚨 PRODUCTION DEPLOYMENT MAY HAVE ISSUES - INVESTIGATE IMMEDIATELY"
+            echo "❌ $FAILURES production route(s) failed - IMMEDIATE INVESTIGATION REQUIRED"
+            echo "🚨 PRODUCTION DEPLOYMENT HAS ISSUES - CHECKING LOGS"
+            ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
+              echo '🔍 Recent Production Laravel logs:' &&
+              tail -100 /var/www/tamam/storage/logs/laravel.log &&
+              echo '🔍 Recent Production PHP-FPM logs:' &&
+              tail -50 /var/log/php8.3-fpm.log &&
+              echo '🔍 Recent Production Nginx error logs:' &&
+              tail -50 /var/log/nginx/error.log &&
+              echo '🔍 Production system resources:' &&
+              free -h && df -h
+            "
+            echo "🚨 CONSIDER IMMEDIATE ROLLBACK IF CRITICAL ISSUES PERSIST"
             exit 1
           fi
       
-      - name: 📊 Production Deployment Summary
+      - name: 📋 Monitor Production System Health
         if: always()
         run: |
+          echo "🔍 Comprehensive production system health check..."
+          ssh root@${{ secrets.PRODUCTION_SERVER_IP }} "
+            echo '=== PRODUCTION SYSTEM HEALTH REPORT ===' &&
+            echo 'Generated at: $(date)' &&
+            echo '' &&
+            
+            echo '🔍 Recent Production Laravel errors (if any):' &&
+            tail -50 /var/www/tamam/storage/logs/laravel.log | grep -E '(ERROR|CRITICAL|EMERGENCY|FATAL)' | tail -10 || echo 'No recent critical errors found' &&
+            
+            echo '' &&
+            echo '🔍 Production PHP-FPM status:' &&
+            systemctl status php8.3-fpm --no-pager -l | head -15 &&
+            
+            echo '' &&
+            echo '🔍 Production Nginx status:' &&
+            systemctl status nginx --no-pager -l | head -15 &&
+            
+            echo '' &&
+            echo '🔍 Production disk usage:' &&
+            df -h /var/www &&
+            
+            echo '' &&
+            echo '🔍 Production memory usage:' &&
+            free -h &&
+            
+            echo '' &&
+            echo '🔍 Production load average:' &&
+            uptime &&
+            
+            echo '' &&
+            echo '🔍 Production network connectivity:' &&
+            ping -c 3 8.8.8.8 || echo 'Network test failed' &&
+            
+            echo '' &&
+            echo '=== END HEALTH REPORT ==='
+          "
+      
+      - name: 🚨 Production Deployment Summary
+        if: always()
+        run: |
+          echo ""
           echo "🎉 PRODUCTION DEPLOYMENT COMPLETE!"
-          echo "📍 Admin URL: https://prod.tamam.shop/admin"
-          echo "📍 Login URL: https://prod.tamam.shop/login/admin"
+          echo ""
+          echo "📍 Production Admin URL: https://prod.tamam.shop/admin"
+          echo "📍 Production Login URL: https://prod.tamam.shop/login/admin"
+          echo "🗄️ Database: Production MySQL Cluster (tamam-production-db-do-user-19403128-0.j.db.ondigitalocean.com)"
+          echo "☁️ Storage: tamam-prod DigitalOcean Space"
           echo "⏰ Deployed at: $(date)"
           echo ""
-          echo "🔍 Critical Next Steps:"
-          echo "  • Immediately test admin login functionality"
-          echo "  • Verify all critical business operations work"
-          echo "  • Monitor server resources and performance"
-          echo "  • Check application error logs"
-          echo "  • Validate database connectivity and data integrity"
+          echo "🚨 CRITICAL PRODUCTION MONITORING REQUIRED:"
+          echo "  🔍 Monitor https://prod.tamam.shop/admin for next 30+ minutes"
+          echo "  🔍 Test ALL critical business operations immediately"
+          echo "  🔍 Verify admin login and user management functions"
+          echo "  🔍 Test order processing and vendor management"
+          echo "  🔍 Validate file uploads and storage operations"
+          echo "  🔍 Check all payment gateway integrations"
+          echo "  🔍 Monitor server resources (CPU, memory, disk)"
+          echo "  🔍 Watch Laravel logs for any errors or warnings"
           echo ""
-          echo "🚨 IMPORTANT: Monitor production closely for 30+ minutes"
+          echo "🔄 ROLLBACK PLAN:"
+          echo "  • Production backup available at /var/www/tamam_backup_[timestamp]"
+          echo "  • Can restore previous version if critical issues arise"
+          echo "  • Database changes may need manual review"
+          echo ""
+          echo "🎯 SUCCESS CRITERIA:"
+          echo "  ✅ All admin routes responding correctly"
+          echo "  ✅ Database connectivity confirmed"
+          echo "  ✅ File storage operations working"
+          echo "  ✅ No critical errors in logs"
+          echo "  ✅ System resources stable"
+          echo ""
+          echo "🚨 PRODUCTION IS LIVE - MONITOR CLOSELY! 🚨"

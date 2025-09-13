@@ -3,6 +3,7 @@
 # 🔧 Production Environment Creator
 # Creates .env file on production server with proper credentials
 # This script should be run ON the production server
+# Uses Production MySQL Cluster (DigitalOcean) as per branch strategy
 
 echo "🔧 Creating production environment file..."
 
@@ -74,4 +75,6 @@ VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 EOF
 
 echo "✅ Production environment template created"
-echo "⚠️  IMPORTANT: Replace placeholders with actual credentials!"
+echo "⚠️  IMPORTANT: Replace placeholders with actual production credentials!"
+echo "📍 Database: Uses Production MySQL Cluster (tamam-production-db-do-user-19403128-0.j.db.ondigitalocean.com)"
+echo "📍 Storage: Uses Production DigitalOcean Spaces (tamam-prod bucket)"

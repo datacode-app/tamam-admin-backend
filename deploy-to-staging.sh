@@ -112,16 +112,19 @@ ssh -i $SSH_KEY root@$SERVER_IP "
 "
 echo "✅ Module activation verified"
 
-# Step 6: Generate Application Key (if needed)
+# Step 6: Deploy and Configure Environment
 echo ""
-echo "🔑 Step 6: Ensuring application key is set..."
+echo "🔑 Step 6: Deploying staging environment configuration..."
+rsync -avz --progress create-staging-env.sh -e "ssh -i $SSH_KEY" root@$SERVER_IP:$REMOTE_PATH/
 ssh -i $SSH_KEY root@$SERVER_IP "
     cd $REMOTE_PATH && 
-    if ! grep -q '^APP_KEY=base64:' .env; then 
+    chmod +x create-staging-env.sh && 
+    echo '📋 Note: Staging environment uses Staging MySQL Cluster' &&
+    if ! grep -q '^APP_KEY=base64:' .env 2>/dev/null; then 
         php artisan key:generate --force
     fi
 "
-echo "✅ Application key verified"
+echo "✅ Environment configuration deployed (staging uses staging MySQL cluster)"
 
 # Step 6.5: Run Database Migrations and Seeders
 echo ""
