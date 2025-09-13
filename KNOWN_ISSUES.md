@@ -413,5 +413,53 @@ Production deployment uses template environment file (`create-production-env.sh`
 
 ---
 
+## Environment Configuration Management
+
+### Issue #9: Environment File Separation Strategy  
+**Status**: ✅ **IMPLEMENTED** - Complete environment separation strategy established
+
+**Challenge**:
+Previously, branches shared `.env` files which caused deployment conflicts and credential mixing between staging and production environments.
+
+**Solution Implemented**:
+
+**Branch-Specific Environment Strategy**:
+- **Main Branch**: Local development with `.env.example` template
+- **Staging Branch**: Server-generated environment via `create-staging-env.sh`
+- **Prod Branch**: Server-generated environment via `create-production-env.sh`
+
+**Environment Configurations**:
+
+| Environment | Domain | Debug | Database | Storage Bucket |
+|-------------|--------|-------|----------|----------------|
+| **Local** | `localhost:8000` | ✅ | Local MySQL | Local/S3 |
+| **Staging** | `staging.tamam.shop` | ✅ | Production DB (shared) | `tamam-staging` |
+| **Production** | `prod.tamam.shop` | ❌ | Production DB | `tamam-prod` |
+
+**Credential Security**:
+- ✅ No actual credentials committed to git
+- ✅ Template files use placeholders  
+- ✅ Deployment scripts create environment files on servers
+- ✅ Each environment has separate DigitalOcean Spaces buckets
+
+**Files Created**:
+- `ENVIRONMENT_SETUP.md` - Complete environment documentation
+- `.env.example` - Local development template
+- `.env.staging.example` - Staging template with placeholders
+- `create-staging-env.sh` - Staging deployment with actual credentials
+
+**Deployment Updates**:
+- `deploy-to-staging.sh` - Now creates staging-specific environment
+- `deploy-to-production.sh` - Creates production-specific environment
+- Both scripts use actual credentials stored in deployment files
+
+**Benefits**:
+- ✅ Prevents deployment conflicts between environments
+- ✅ Maintains credential separation and security
+- ✅ Enables environment-specific configurations
+- ✅ Supports different storage buckets and debug modes
+
+---
+
 *Last Updated: September 13, 2025*  
 *Contributors: Claude AI Assistant, Hooshyar*
