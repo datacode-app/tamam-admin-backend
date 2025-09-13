@@ -249,25 +249,23 @@
                                 <div class="__nav-module-body">
                                     <div class="__nav-module-items">
                                         @foreach ($modules as $module)
-                                        @if($module->module_type != 'rental')
-                                            <a href="javascript:"
-
-                                               data-module-id="{{ $module->id }}"
-                                               data-url="{{route('admin.dashboard')}}"
-                                               data-filter="module_id"
-
-                                               class="__nav-module-item set-module {{Config::get('module.current_module_id') == $module->id?'active':''}}">
-                                                <div class="img w--70px ">
-                                                    <img src="{{ $module?->icon_full_url }}"
-
-                                                         data-onerror-image="{{asset('assets/admin/img/new-img/module/e-shop.svg')}}"
-                                                         alt="new-img" class="mw-100 onerror-image">
-                                                </div>
-                                                <div>
-                                                    {{ $module->module_name }}
-                                                </div>
-                                            </a>
-                                        @endif
+                                            @php($isRental = $module->module_type === 'rental')
+                                            @if(!$isRental || ($isRental && addon_published_status('Rental') == 1))
+                                                <a href="javascript:"
+                                                   data-module-id="{{ $module->id }}"
+                                                   data-url="{{ $isRental ? route('admin.rental.dashboard') : route('admin.dashboard') }}"
+                                                   data-filter="module_id"
+                                                   class="__nav-module-item set-module {{Config::get('module.current_module_id') == $module->id?'active':''}}">
+                                                    <div class="img w--70px ">
+                                                        <img src="{{ $module?->icon_full_url }}"
+                                                             data-onerror-image="{{asset('assets/admin/img/new-img/module/e-shop.svg')}}"
+                                                             alt="new-img" class="mw-100 onerror-image">
+                                                    </div>
+                                                    <div>
+                                                        {{ $module->module_name }}
+                                                    </div>
+                                                </a>
+                                            @endif
                                         @endforeach
                                         @if (\App\CentralLogics\Helpers::module_permission_check('module'))
                                             <a href="{{ route('admin.business-settings.module.create') }}"
