@@ -257,7 +257,7 @@
 
                                         </label>
                                         <div class="justify-content-between border form-control">
-                                            @foreach (config('module.module_type') as $key => $value)
+                                            @foreach (config('module.module_type') ?? [] as $key => $value)
                                             @if ($value != 'parcel')
                                             <div class="form-check form-check-inline mx-4  ">
                                                 <input class="mx-2 form-check-input" type="checkbox" {{  data_get($extra_packaging_data,$value,null) == 1 ? 'checked' :'' }} id="inlineCheckbox{{$key}}" value="1" name="{{ $value }}">

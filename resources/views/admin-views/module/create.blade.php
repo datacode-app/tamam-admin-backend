@@ -119,7 +119,7 @@
                             <label class="input-label" for="module_type">{{translate('messages.business_module_type')}}</label>
                             <select name="module_type" id="module_type" class="form-control text-capitalize module-change">
                                 <option disabled selected>{{translate('messages.select_business_module_type')}}</option>
-                                @foreach (config('module.module_type') as $key)
+                                @foreach (config('module.module_type') ?? [] as $key)
                                 <option class="" value="{{$key}}">{{translate($key)}}</option>
                                 @endforeach
                             </select>
@@ -142,7 +142,7 @@
                         <div class="card">
                             <div class="card-body p-0">
                                 <div class="module-radio-group">
-                                @foreach (config('module.module_type') as $key)
+                                @foreach (config('module.module_type') ?? [] as $key)
                                 @if($key != 'rental')
                                 <label class="form-check form--check">
                                     <input class="form-check-input" type="radio" name="module_type" value="{{$key}}">

@@ -141,7 +141,7 @@
                                     <div class="card">
                                         <div class="card-body p-0">
                                             <div class="module-radio-group">
-                                            @foreach (config('module.module_type') as $key)
+                                            @foreach (config('module.module_type') ?? [] as $key)
                                             @if($key != 'rental'  )
                                             <label class="form-check form--check">
                                                 <input class="form-check-input" disabled type="radio" name="module_type" value="{{$key}}" {{$key==$module->module_type?'checked':''}}>

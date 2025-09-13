@@ -34,7 +34,7 @@ class WalletController extends Controller
     {
         $data =  data_get($this->getWithdrawMethods() , 'data' , [] );
         $withdrawal_methods =  data_get($this->getWithdrawMethods() , 'withdrawal_methods' , [] );
-        $withdraw_req = WithdrawRequest::with(['vendor','method'])->where('vendor_id', Helpers::get_vendor_id())->latest()->paginate(config('default_pagination'));
+        $withdraw_req = WithdrawRequest::with(['vendor','method'])->where('vendor_id', Helpers::get_vendor_id())->latest()->paginate(config('default_pagination') ?? 25);
         return view('vendor-views.wallet.index', compact('withdraw_req','withdrawal_methods','data'));
     }
     public function w_request(Request $request)
@@ -250,7 +250,7 @@ class WalletController extends Controller
         $withdrawal_methods = WithdrawalMethod::ofStatus(1)->get();
 
         $published_status =0;
-        $payment_published_status = config('get_payment_publish_status');
+        $payment_published_status = config('get_payment_publish_status') ?? [];
         if (isset($payment_published_status[0]['is_published'])) {
             $published_status = $payment_published_status[0]['is_published'];
         }
