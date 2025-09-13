@@ -7,7 +7,7 @@
 
 echo "🔧 Creating staging environment file..."
 
-cat > /var/www/tamam/.env << 'EOF'
+cat > /var/www/tamam/.env << EOF
 APP_NAME=Laravel
 APP_ENV=staging
 APP_KEY=base64:PMl05FDKUiHKrMNi7Z91lPgp8Zbv5z6OnPA42RuYdGw=

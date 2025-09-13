@@ -7,7 +7,7 @@
 
 echo "🔧 Creating production environment file..."
 
-cat > /var/www/tamam/.env << 'EOF'
+cat > /var/www/tamam/.env << EOF
 APP_NAME=Laravel
 APP_ENV=production
 APP_KEY=base64:EvCdLnWM9f4hNotbvmwTo1w+PM2693O9gyknfhNozHs=
