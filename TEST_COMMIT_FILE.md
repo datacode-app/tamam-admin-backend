@@ -1,1 +1,0 @@
-# Smart Commit Scripts Test
