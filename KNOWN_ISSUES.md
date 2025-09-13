@@ -461,5 +461,46 @@ Previously, branches shared `.env` files which caused deployment conflicts and c
 
 ---
 
+## Testing Framework Issues
+
+### Issue #10: PHPUnit 10.x/Collision Compatibility Error  
+**Status**: ✅ **RESOLVED** - Updated dependency versions for compatibility
+
+**Error Message**:
+```
+Running PHPUnit 10.x or Pest 2.x requires Collision 7.x.
+NunoMaduro\Collision\Adapters\Laravel\Exceptions\RequirementsException
+```
+
+**Root Cause**:
+Version mismatch between testing dependencies:
+- Project had `nunomaduro/collision": "^6.1"` (version 6.x)
+- Project had `phpunit/phpunit": "^10.0"` (version 10.x)  
+- PHPUnit 10.x requires Collision 7.x for compatibility
+
+**Solution Applied**:
+1. ✅ Updated `composer.json`: `nunomaduro/collision": "^6.1"` → `"^7.0"`
+2. ✅ Ran `composer update nunomaduro/collision` to install v7.12.0
+3. ✅ Added `.env.testing` for proper testing environment configuration
+4. ✅ Verified `php artisan test` command works correctly
+
+**Files Modified**:
+- `composer.json` - Updated collision version constraint
+- `composer.lock` - Updated with collision v7.12.0
+- `.env.testing` - New testing environment configuration
+
+**Testing Status**:
+- ✅ PHPUnit/Collision compatibility error resolved
+- ✅ `php artisan test` command functional
+- ✅ Test suite can run without version conflicts
+- ⚠️ Additional test environment configuration may be needed for database tests
+
+**Prevention**:
+- Keep testing dependencies aligned with framework requirements
+- Update collision version when upgrading PHPUnit major versions
+- Monitor deprecation warnings during dependency updates
+
+---
+
 *Last Updated: September 13, 2025*  
 *Contributors: Claude AI Assistant, Hooshyar*
