@@ -177,43 +177,6 @@
                     </a>
                 </li>
                 @endif
-                    @if (addon_published_status('Rental'))
-                        <!-- Rental Report -->
-                        @if (\App\CentralLogics\Helpers::module_permission_check('rental_report'))
-                            <li class="nav-item">
-                                <small class="nav-subtitle" title="{{ translate('messages.rental_report_and_analytics') }}">{{ translate('messages.rental_report_and_analytics') }}</small>
-                                <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                            </li>
-
-                            <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/rental/report/transaction-report') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.transactions.rental.report.transaction-report') }}" title="{{ translate('messages.transection_report') }}">
-                                    <span class="tio-chart-pie-1 nav-icon"></span>
-                                    <span class="text-truncate">{{ translate('messages.transaction_report') }}</span>
-                                </a>
-                            </li>
-
-                            <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/rental/report/vehicle-report') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.transactions.rental.report.vehicle-wise-report') }}" title="{{ translate('messages.vehicle_report') }}">
-                                    <span class="tio-chart-bar-1 nav-icon"></span>
-                                    <span class="text-truncate">{{ translate('messages.vehicle_report') }}</span>
-                                </a>
-                            </li>
-
-                            <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/rental/report/provider*') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.transactions.rental.report.provider-summary-report') }}" title="{{ translate('messages.provider_wise_report') }}">
-                                    <span class="tio-home nav-icon"></span>
-                                    <span class="text-truncate">{{ translate('messages.provider_wise_report') }}</span>
-                                </a>
-                            </li>
-
-                            <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/rental/report/trip-report') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.transactions.rental.report.trip-report') }}" title="{{ translate('messages.trip_report') }}">
-                                    <span class="tio-chart-bar-4 nav-icon"></span>
-                                    <span class="text-truncate text-capitalize">{{ translate('messages.trip_report') }}</span>
-                                </a>
-                            </li>
-                        @endif
-                    @endif
                 <li class="nav-item py-5">
 
                 </li>
