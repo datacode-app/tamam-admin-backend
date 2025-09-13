@@ -370,5 +370,42 @@ Before marking any issue as "RESOLVED":
 
 ---
 
+## Production Database Connection Issues
+
+### Issue #8: Production Environment Placeholder Credentials  
+**Status**: 🔍 **IDENTIFIED** - Production server has placeholder database credentials
+
+**Symptoms**:
+- HTTP 500 errors on all admin routes after deployment
+- Database connection errors: "Access denied for user 'doadmin'@'134.209.230.97'"
+- Routes fixed but database connectivity failing
+
+**Root Cause**:
+Production deployment uses template environment file (`create-production-env.sh`) with placeholder credentials:
+- `DB_PASSWORD=PRODUCTION_DB_PASSWORD_PLACEHOLDER` 
+- `AWS_ACCESS_KEY_ID=PRODUCTION_SPACES_KEY_PLACEHOLDER`
+- `AWS_SECRET_ACCESS_KEY=PRODUCTION_SPACES_SECRET_PLACEHOLDER`
+
+**Database Configuration**:
+- Host: `tamam-production-db-do-user-19403128-0.j.db.ondigitalocean.com`
+- Port: `25060`
+- Database: `tamamdb` 
+- Username: `doadmin`
+- Password: **[NEEDS REAL CREDENTIAL]**
+
+**Files Affected**:
+- `/var/www/tamam/.env` (production server)
+- `create-production-env.sh` (deployment template)
+
+**Solution Required**:
+1. Obtain actual production database password from DigitalOcean
+2. Update production `.env` file with real credentials
+3. Restart PHP-FPM to reload configuration
+4. Test database connectivity
+
+**Update Status**: Route fixes deployed successfully ✅, database credentials pending ⚠️
+
+---
+
 *Last Updated: September 13, 2025*  
 *Contributors: Claude AI Assistant, Hooshyar*
