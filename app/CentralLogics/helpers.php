@@ -2101,7 +2101,8 @@ class Helpers
             } else if ($mod_name == 'pos') {
                 return auth('vendor')->user()->stores[0]->pos_system;
             } else if ($mod_name == 'addon') {
-                return config('module.' . auth('vendor')->user()->stores[0]->module->module_type)['add_on'];
+                $module_config = config('module.' . auth('vendor')->user()->stores[0]->module->module_type) ?? [];
+                return $module_config['add_on'] ?? false;
             }
             return true;
         } else if (auth('vendor_employee')->check()) {
