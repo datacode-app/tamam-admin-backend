@@ -55,9 +55,16 @@ rsync -avz --progress \
 
 echo "✅ Laravel files deployed successfully"
 
-# Step 3: Fix File Permissions
+# Step 3: Deploy Staging Environment Template
 echo ""
-echo "🔧 Step 3: Setting proper file permissions..."
+echo "🔧 Step 3: Deploying staging environment template..."
+rsync -avz --progress create-staging-env.sh -e "ssh -i $SSH_KEY" root@$SERVER_IP:$REMOTE_PATH/
+ssh -i $SSH_KEY root@$SERVER_IP "cd $REMOTE_PATH && chmod +x create-staging-env.sh && ./create-staging-env.sh"
+echo "✅ Staging environment configured with actual credentials"
+
+# Step 4: Fix File Permissions
+echo ""
+echo "🔧 Step 4: Setting proper file permissions..."
 ssh -i $SSH_KEY root@$SERVER_IP "
     chown -R www-data:www-data $REMOTE_PATH && 
     chmod -R 755 $REMOTE_PATH && 
