@@ -185,7 +185,8 @@ class VendorController extends Controller
             "had_cover_upload" => $request->hasFile('cover_photo')
         ]);
             // $store->module->increment('stores_count');
-            if(config('module.'.$store->module->module_type)['always_open'])
+            $module_config = config('module.'.$store->module->module_type) ?? [];
+            if(isset($module_config['always_open']) && $module_config['always_open'])
             {
                 StoreLogic::insert_schedule($store->id);
             }
@@ -623,7 +624,7 @@ class VendorController extends Controller
                         }
                     });
                 })
-                ->latest()->paginate(config('default_pagination'));
+                ->latest()->paginate(config('default_pagination') ?? 25);
             return view('admin-views.vendor.view.disbursement', compact('store','disbursements'));
         } else if ($tab == 'business_plan') {
 
@@ -1428,7 +1429,7 @@ class VendorController extends Controller
                 });
             })
             ->latest()
-            ->paginate(config('default_pagination'));
+            ->paginate(config('default_pagination') ?? 25);
 
             if(!Helpers::module_permission_check('withdraw_list')){
                 return view('admin-views.wallet.withdraw-dashboard');
@@ -1945,7 +1946,7 @@ class VendorController extends Controller
                 $emailToCollection[$collection['email']] = $collection;
                 if($module = Module::select('module_type')->where('id', $collection['module_id'])->first())
                 {
-                    if(config('module.'.$module->module_type))
+                    if(config('module.'.$module->module_type) ?? false)
                     {
                         $store_ids[] = $current_store_id;
                     }
@@ -2717,7 +2718,7 @@ class VendorController extends Controller
                     });
                 });
             })
-        ->paginate(config('default_pagination'));
+        ->paginate(config('default_pagination') ?? 25);
 
       $shuffle_recommended_store =  DataSetting::where(['key' => 'shuffle_recommended_store' , 'type' => Config::get('module.current_module_id')])?->first()?->value;
 

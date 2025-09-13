@@ -352,7 +352,8 @@ class BusinessSettingsController extends Controller
             'value' => $time
         ]);
         $values = [];
-        foreach (config('module.module_type') as $key => $value) {
+        $module_types = config('module.module_type') ?? [];
+        foreach ($module_types as $key => $value) {
             $values[$value] = $request[$value] ?? 0;
         }
 
@@ -890,20 +891,22 @@ class BusinessSettingsController extends Controller
     public function payment_index()
     {
         $published_status = 0; // Set a default value
-        $payment_published_status = config('get_payment_publish_status');
+        $payment_published_status = config('get_payment_publish_status') ?? [];
         if (isset($payment_published_status[0]['is_published'])) {
             $published_status = $payment_published_status[0]['is_published'];
         }
 
-        $routes = config('addon_admin_routes');
+        $routes = config('addon_admin_routes') ?? [];
         $desiredName = 'payment_setup';
         $payment_url = '';
 
         foreach ($routes as $routeArray) {
-            foreach ($routeArray as $route) {
-                if ($route['name'] === $desiredName) {
-                    $payment_url = $route['url'];
-                    break 2;
+            if (is_array($routeArray)) {
+                foreach ($routeArray as $route) {
+                    if (is_array($route) && isset($route['name']) && $route['name'] === $desiredName) {
+                        $payment_url = $route['url'] ?? '';
+                        break 2;
+                    }
                 }
             }
         }

@@ -111,7 +111,7 @@
                                 <select name="module_type" class="form-control js-select2-custom set-filter"
                                     data-url="{{ url()->full() }}" data-filter="module_type"
                                     title="{{ translate('messages.select_modules') }}">
-                                    @foreach (config('module.module_type') as $module)
+                                    @foreach (config('module.module_type') ?? [] as $module)
                                         <option value="{{ $module }}" {{ $mod_type == $module ? 'selected' : '' }}>
                                             {{ ucfirst(translate($module)) }}
                                         </option>

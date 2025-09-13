@@ -57,11 +57,11 @@ class TestSpacesConnection extends Command
         
         // Test 3: Configuration check
         $this->info('\n3. Configuration check...');
-        $config = config('filesystems.disks.spaces');
+        $config = config('filesystems.disks.spaces') ?? [];
         
         $required = ['key', 'secret', 'endpoint', 'region', 'bucket'];
         foreach ($required as $field) {
-            if (empty($config[$field])) {
+            if (empty($config[$field] ?? null)) {
                 $this->error('❌ Missing configuration: ' . $field);
             } else {
                 $this->info('✅ ' . $field . ': configured');

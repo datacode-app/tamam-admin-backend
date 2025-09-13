@@ -356,52 +356,14 @@
                                 <span class="text-truncate">{{ translate('messages.react_site') }}</span>
                             </a>
                         </li>
-                        @if (addon_published_status('Rental'))
-
-                            <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/rental-email-setup*') || Request::is('admin/business-settings/email-setup*') ? 'active' : '' }}">
-                                <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" id="tourb-3"
-                                   href="javascript:" title="{{ translate('messages.email_setup') }}">
-                                    <i class="tio-email nav-icon"></i>
-                                    <span class="text-truncate">{{ translate('messages.email_setup') }}</span>
-                                </a>
-                                <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                    style="display:{{ Request::is('admin/business-settings/rental-email-setup*') || Request::is('admin/business-settings/email-setup*') ? 'block' : 'none' }}">
-
-                                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/email-setup*') ? 'active' : '' }}">
-                                        <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                           href="{{ route('admin.business-settings.email-setup',['admin','forgot-password']) }}"
-                                           title="{{ translate('messages.All_Modules') }}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">
-                                    {{ translate('messages.All_Modules') }}
-                                </span>
-                                        </a>
-                                    </li>
-                                    <li class="navbar-vertical-aside-has-menu  {{ Request::is('admin/business-settings/rental-email-setup*') ? 'active' : '' }}">
-                                        <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                           href="{{ route('admin.business-settings.rental-email-setup',['admin','provider-registration']) }}"
-                                           title="{{ translate('messages.Rental_Module') }}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">
-                                    {{ translate('messages.Rental_Module') }}
-                                </span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-
-
-
-                        @else
-                            <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/email-setup*') ? 'active' : '' }}">
-                                <a class="nav-link "
-                                   href="{{ route('admin.business-settings.email-setup',['admin','forgot-password']) }}"
-                                   title="{{ translate('messages.email_template') }}">
-                                    <span class="tio-email nav-icon"></span>
-                                    <span class="text-truncate">{{ translate('messages.email_template') }}</span>
-                                </a>
-                            </li>
-                        @endif
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/email-setup*') ? 'active' : '' }}">
+                            <a class="nav-link "
+                               href="{{ route('admin.business-settings.email-setup',['admin','forgot-password']) }}"
+                               title="{{ translate('messages.email_template') }}">
+                                <span class="tio-email nav-icon"></span>
+                                <span class="text-truncate">{{ translate('messages.email_template') }}</span>
+                            </a>
+                        </li>
 
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/app-settings*') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.business-settings.app-settings') }}"
@@ -414,52 +376,14 @@
 
 
 
-                        @if (addon_published_status('Rental'))
-
-                        <li class="navbar-vertical-aside-has-menu @yield('notification_setup_type')">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" id="tourb-3"
-                               href="javascript:" title="{{ translate('messages.notification_setup') }}">
-                                <i class="tio-crown nav-icon"></i>
-                                <span class="text-truncate">{{ translate('messages.notification_setup') }}</span>
+                        <li class="navbar-vertical-aside-has-menu  @yield('notification_setup')">
+                            <a class="nav-link " href="{{ route('admin.business-settings.notification_setup') }}"
+                            title="{{ translate('messages.Notification_Channels') }} ">
+                                <span class="tio-snooze-notification  nav-icon"></span>
+                                <span class="text-truncate">{{ translate('messages.Notification_Channels') }}
+                        </span>
                             </a>
-                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display:{{ Request::is('admin/business-settings/notification-setup*') ? 'block' : 'none' }}">
-
-                                <li class="navbar-vertical-aside-has-menu @yield('notification_setup')">
-                                    <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                       href="{{ route('admin.business-settings.notification_setup') }}"
-                                       title="{{ translate('messages.All_Modules') }}">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">
-                                    {{ translate('messages.All_Modules') }}
-                                </span>
-                                    </a>
-                                </li>
-                                <li class="navbar-vertical-aside-has-menu  @yield('notification_setup_rental')">
-                                    <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                       href="{{ route('admin.business-settings.notification_setup',['module'=> 'rental']) }}"
-                                       title="{{ translate('messages.Rental_Module') }}">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">
-                                    {{ translate('messages.Rental_Module') }}
-                                </span>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
-
-
-
-                        @else
-                            <li class="navbar-vertical-aside-has-menu  @yield('notification_setup')">
-                                <a class="nav-link " href="{{ route('admin.business-settings.notification_setup') }}"
-                                title="{{ translate('messages.Notification_Channels') }} ">
-                                    <span class="tio-snooze-notification  nav-icon"></span>
-                                    <span class="text-truncate">{{ translate('messages.Notification_Channels') }}
-                            </span>
-                                </a>
-                            </li>
-                        @endif
 
 
 
